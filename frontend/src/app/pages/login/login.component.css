@@ -1,0 +1,6 @@
+/* Fondo con patrón sutil (opcional, le da textura) */
+.bg-pattern {
+  background-image: radial-gradient(#5D4037 0.5px, transparent 0.5px);
+  background-size: 20px 20px;
+  opacity: 0.05;
+}

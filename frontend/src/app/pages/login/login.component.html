@@ -1,0 +1,118 @@
+<div class="min-h-screen flex bg-bakery-cream relative overflow-hidden">
+  
+  <div class="absolute inset-0 bg-pattern pointer-events-none"></div>
+
+  <div class="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 z-10">
+    
+    <div class="w-full max-w-md space-y-8 animate-enter">
+      
+      <div class="text-center">
+        <div class="mx-auto h-12 w-12 bg-bakery-brown rounded-full flex items-center justify-center mb-4 shadow-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-bakery-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        
+        <h2 class="font-serif text-4xl font-bold text-bakery-brown tracking-tight">
+          Bienvenido de nuevo
+        </h2>
+        <p class="mt-2 text-sm text-gray-500 font-sans">
+          Accede al panel de control de <span class="font-bold text-bakery-gold">Altísimo</span>
+        </p>
+      </div>
+
+      <form class="mt-8 space-y-6 bg-white p-8 rounded-2xl shadow-[0_20px_50px_rgba(93,64,55,0.1)] border border-gray-100 delay-100 animate-enter" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        
+        <div class="space-y-5">
+          <div class="group">
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1 transition-colors group-focus-within:text-bakery-brown">Correo electrónico</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400 group-focus-within:text-bakery-gold transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                </svg>
+              </div>
+              <input 
+                id="email" 
+                type="email" 
+                formControlName="email" 
+                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-bakery-gold/50 focus:border-bakery-gold transition-all duration-300 bg-gray-50 focus:bg-white" 
+                placeholder="ejemplo@altisimo.com"
+              >
+            </div>
+            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="mt-1 flex items-center text-xs text-red-500 animate-pulse">
+              <svg class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              Correo inválido
+            </div>
+          </div>
+
+          <div class="group">
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1 transition-colors group-focus-within:text-bakery-brown">Contraseña</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400 group-focus-within:text-bakery-gold transition-colors" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                </svg>
+              </div>
+              <input 
+                id="password" 
+                type="password" 
+                formControlName="password" 
+                class="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-bakery-gold/50 focus:border-bakery-gold transition-all duration-300 bg-gray-50 focus:bg-white" 
+                placeholder="••••••••"
+              >
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="bg-red-50 border-l-4 border-red-500 p-4 rounded-md animate-enter">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-red-700">{{ errorMessage }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="delay-200 animate-enter">
+          <button 
+            type="submit" 
+            [disabled]="loginForm.invalid || isLoading"
+            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-bold text-white bg-gradient-to-r from-bakery-brown to-[#795548] hover:to-bakery-brown hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bakery-brown transform transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+          >
+            <svg *ngIf="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            {{ isLoading ? 'Verificando...' : 'Ingresar al Sistema' }}
+          </button>
+        </div>
+      </form>
+      
+      <p class="text-center text-xs text-gray-400 mt-4 delay-300 animate-enter">
+        &copy; 2026 Altísimo Panadería. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+
+  <div class="hidden lg:block lg:w-1/2 relative">
+    <img 
+      class="absolute inset-0 h-full w-full object-cover" 
+      src="https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1372&q=80" 
+      alt="Pan artesanal recién horneado"
+    >
+    <div class="absolute inset-0 bg-gradient-to-r from-bakery-brown/40 to-black/40 mix-blend-multiply"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-12">
+      <div class="text-white space-y-2 animate-enter delay-300">
+        <h3 class="text-3xl font-serif font-bold">La tradición hecha pan.</h3>
+        <p class="text-gray-200 font-light max-w-md">Gestiona tus productos y clientes con la misma dedicación con la que horneamos cada mañana.</p>
+      </div>
+    </div>
+  </div>
+
+</div>

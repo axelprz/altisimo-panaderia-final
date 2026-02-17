@@ -1,0 +1,78 @@
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Mac OS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+
+# VS Code / JetBrains (Configuraciones locales del editor)
+.vscode/
+.idea/
+*.swp
+*.swo
+
+frontend/node_modules/
+node_modules/
+
+# Builds de producción (Se generan al compilar)
+frontend/dist/
+frontend/out-tsc/
+
+# Archivos de cache y logs
+frontend/.angular/
+frontend/.sass-cache/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing coverage
+frontend/coverage/
+
+
+# Ignora archivos llamados 'main' o 'backend' sin extensión
+backend/main
+backend/backend
+# Ignora ejecutables de Windows (.exe)
+*.exe
+*.exe~
+*.dll
+
+# Carpetas de output temporal
+backend/bin/
+backend/dist/
+
+# Vendor (Si usaras vendoring, aunque con Go Modules ya no es tan común subirlo)
+backend/vendor/
+
+# Archivos de coverage de tests
+*.out
+*.test
+
+
+# Logs de docker
+docker/*.log
+
+# Dumps o backups de base de datos locales (por si haces pruebas)
+*.sql.gz
+*.sql.zip
+# Excepción: No ignorar el script de inicio
+!database/init.sql
+
+# Si alguna vez mapeas la data de postgres a una carpeta local 'data'
+database/data/
+postgres_data/

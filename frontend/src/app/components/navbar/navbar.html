@@ -2,7 +2,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-20">
       
-      <div class="flex-shrink-0 flex items-center cursor-pointer">
+      <div class="flex-shrink-0 flex items-center cursor-pointer" routerLink="/">
         <div class="flex flex-col">
           <span class="font-serif text-2xl font-bold text-bakery-brown tracking-wide">
             Altísimo
@@ -14,10 +14,26 @@
       </div>
 
       <div class="hidden md:flex space-x-8 items-center">
-        <a href="#" class="text-gray-600 hover:text-bakery-brown font-medium transition duration-300 border-b-2 border-transparent hover:border-bakery-gold pb-1">Inicio</a>
-        <a href="#" class="text-gray-600 hover:text-bakery-brown font-medium transition duration-300 border-b-2 border-transparent hover:border-bakery-gold pb-1">Nosotros</a>
-        <a href="#" class="text-gray-600 hover:text-bakery-brown font-medium transition duration-300 border-b-2 border-transparent hover:border-bakery-gold pb-1">Productos</a>
-        <a href="#" class="text-gray-600 hover:text-bakery-brown font-medium transition duration-300 border-b-2 border-transparent hover:border-bakery-gold pb-1">Contacto</a>
+        <a routerLink="/" 
+           routerLinkActive="border-bakery-gold text-bakery-brown" 
+           [routerLinkActiveOptions]="{exact: true}"
+           class="text-gray-600 hover:text-bakery-brown font-medium transition duration-300 border-b-2 border-transparent hover:border-bakery-gold pb-1 cursor-pointer">
+           Inicio
+        </a>
+        
+        <a routerLink="/nosotros" 
+           routerLinkActive="border-bakery-gold text-bakery-brown"
+           class="text-gray-600 hover:text-bakery-brown font-medium transition duration-300 border-b-2 border-transparent hover:border-bakery-gold pb-1 cursor-pointer">
+           Nosotros
+        </a>
+        
+        <a class="text-gray-600 hover:text-bakery-brown font-medium transition duration-300 border-b-2 border-transparent hover:border-bakery-gold pb-1 cursor-pointer">
+           Productos
+        </a>
+        
+        <a class="text-gray-600 hover:text-bakery-brown font-medium transition duration-300 border-b-2 border-transparent hover:border-bakery-gold pb-1 cursor-pointer">
+           Contacto
+        </a>
       </div>
 
       <div class="flex items-center space-x-4">
@@ -32,7 +48,9 @@
         <div class="flex md:hidden">
           <button (click)="toggleMenu()" type="button" class="text-gray-500 hover:text-bakery-brown focus:outline-none">
             <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path *ngIf="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /> <path *ngIf="isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /> </svg>
+              <path *ngIf="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /> 
+              <path *ngIf="isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /> 
+            </svg>
           </button>
         </div>
       </div>
@@ -41,10 +59,32 @@
 
   <div class="md:hidden bg-white border-t border-gray-100" *ngIf="isMobileMenuOpen">
     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 shadow-inner">
-      <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-bakery-brown hover:bg-bakery-cream transition">Inicio</a>
-      <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-bakery-brown hover:bg-bakery-cream transition">Nosotros</a>
-      <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-bakery-brown hover:bg-bakery-cream transition">Productos</a>
-      <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-bakery-brown hover:bg-bakery-cream transition">Contacto</a>
+      
+      <a routerLink="/" 
+         (click)="toggleMenu()"
+         routerLinkActive="bg-bakery-cream text-bakery-brown"
+         [routerLinkActiveOptions]="{exact: true}"
+         class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-bakery-brown hover:bg-bakery-cream transition cursor-pointer">
+         Inicio
+      </a>
+      
+      <a routerLink="/nosotros" 
+         (click)="toggleMenu()"
+         routerLinkActive="bg-bakery-cream text-bakery-brown"
+         class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-bakery-brown hover:bg-bakery-cream transition cursor-pointer">
+         Nosotros
+      </a>
+      
+      <a (click)="toggleMenu()" 
+         class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-bakery-brown hover:bg-bakery-cream transition cursor-pointer">
+         Productos
+      </a>
+      
+      <a (click)="toggleMenu()" 
+         class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-bakery-brown hover:bg-bakery-cream transition cursor-pointer">
+         Contacto
+      </a>
+
     </div>
   </div>
 </nav>

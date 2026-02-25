@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, of } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -7,8 +7,8 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  // Cuando tengamos el backend en Go, usaremos esta URL real
-  private apiUrl = 'http://localhost:8080/api/login'; 
+  // Ajustamos la URL para que sea la base de nuestra API
+  private apiUrl = 'http://localhost:8080/api'; 
   private tokenKey = 'auth_token';
   
   // BehaviorSubject nos permite saber si estamos logueados en cualquier parte de la app
@@ -18,14 +18,26 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) {}
 
   login(credentials: { email: string; password: string }): Observable<any> {
-    // LLAMADA REAL AL BACKEND GO
-    return this.http.post<{ token: string, user: string }>(this.apiUrl, credentials).pipe(
+    // Le agregamos '/login' a la URL base
+    return this.http.post<{ token: string, user: string }>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
         // Guardamos el token real que nos dio Go
         localStorage.setItem(this.tokenKey, response.token);
         this.isLoggedInSubject.next(true);
       })
     );
+  }
+
+  // --- NUEVO MÉTODO: CAMBIAR CONTRASEÑA ---
+  changePassword(data: { currentPassword: string, newPassword: string }): Observable<any> {
+    // 1. Obtenemos el token guardado
+    const token = localStorage.getItem(this.tokenKey);
+    
+    // 2. Armamos la cabecera (Header) de autorización
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+    // 3. Enviamos la petición PUT a la ruta protegida
+    return this.http.put(`${this.apiUrl}/user/password`, data, { headers });
   }
 
   logout() {

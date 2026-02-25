@@ -46,6 +46,12 @@ func main() {
 		{
 			protected.POST("/users", handlers.CreateUser)
 		}
+		// Rutas del Usuario (Requieren Token)
+		userGroup := api.Group("/user")
+		userGroup.Use(middleware.RequireAuth) 
+		{
+			userGroup.PUT("/password", handlers.ChangePassword)
+		}
 	}
 
 	log.Println("🚀 Servidor corriendo en puerto 8080")

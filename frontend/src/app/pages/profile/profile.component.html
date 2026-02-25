@@ -1,0 +1,62 @@
+<div class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8 animate-enter">
+  
+  <div class="md:flex md:items-center md:justify-between mb-8">
+    <div class="flex-1 min-w-0">
+      <h2 class="text-3xl font-serif font-bold text-bakery-brown sm:truncate">Mi Perfil</h2>
+      <p class="mt-1 text-sm text-gray-500">Gestiona tus credenciales de acceso seguro.</p>
+    </div>
+  </div>
+
+  <div class="bg-white shadow overflow-hidden sm:rounded-lg border border-gray-100">
+    <div class="px-4 py-5 sm:px-6 bg-bakery-cream/30 border-b border-gray-200 flex items-center gap-4">
+      <div class="h-16 w-16 rounded-full bg-bakery-brown flex items-center justify-center text-bakery-gold text-2xl font-bold">
+        A</div>
+      <div>
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Administrador Altísimo</h3>
+        <p class="mt-1 max-w-2xl text-sm text-gray-500">{{ userEmail }}</p>
+      </div>
+    </div>
+
+    <div class="px-4 py-5 sm:p-6">
+      <h3 class="text-lg font-medium text-bakery-brown mb-4">Cambiar Contraseña</h3>
+      
+      <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()" class="space-y-6 max-w-md">
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Contraseña Actual</label>
+          <input type="password" formControlName="currentPassword" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-bakery-gold focus:border-bakery-gold sm:text-sm">
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Nueva Contraseña</label>
+          <input type="password" formControlName="newPassword" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-bakery-gold focus:border-bakery-gold sm:text-sm">
+          <p *ngIf="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('minlength')" class="mt-1 text-xs text-red-500">
+            Debe tener al menos 6 caracteres.
+          </p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Confirmar Nueva Contraseña</label>
+          <input type="password" formControlName="confirmPassword" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-bakery-gold focus:border-bakery-gold sm:text-sm">
+          <p *ngIf="passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched" class="mt-1 text-xs text-red-500">
+            Las contraseñas no coinciden.
+          </p>
+        </div>
+
+        <div *ngIf="successMessage" class="p-3 bg-green-50 text-green-700 text-sm rounded-md border border-green-200">
+          {{ successMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="p-3 bg-red-50 text-red-700 text-sm rounded-md border border-red-200">
+          {{ errorMessage }}
+        </div>
+
+        <div>
+          <button type="submit" [disabled]="passwordForm.invalid || isLoading" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-bakery-brown hover:bg-bakery-gold focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bakery-brown disabled:opacity-50 transition-colors">
+            {{ isLoading ? 'Guardando...' : 'Actualizar Contraseña' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

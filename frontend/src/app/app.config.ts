@@ -1,12 +1,17 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withInMemoryScrolling } from '@angular/router'; // Añadimos withInMemoryScrolling
+import { routes } from './app.routes'; 
 import { provideHttpClient } from '@angular/common/http';
 
-import { routes } from './app.routes';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
+    provideRouter(
+      routes, 
+      // Esta es la configuración para que el scroll siempre suba al cambiar de página
+      withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })
+    ), 
     provideHttpClient()
   ]
 };

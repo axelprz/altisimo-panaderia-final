@@ -16,7 +16,7 @@ var DB *gorm.DB
 func Connect() {
 	var err error
 
-	// Variables de entorno definidas en docker-compose.yml
+
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=America/Argentina/Buenos_Aires",
 		os.Getenv("DB_HOST"),
@@ -26,7 +26,7 @@ func Connect() {
 		os.Getenv("DB_PORT"),
 	)
 
-	// Intentar conectar 10 veces (útil para Docker)
+	
 	for i := 0; i < 10; i++ {
 		DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		if err == nil {
@@ -41,6 +41,6 @@ func Connect() {
 		log.Fatal("❌ Error fatal: No se pudo conectar a la BD:", err)
 	}
 
-	// Crea la tabla de usuarios automáticamente si no existe
-	DB.AutoMigrate(&models.User{})
+	// Migración automática de tablas
+	DB.AutoMigrate(&models.User{}, &models.Product{})
 }

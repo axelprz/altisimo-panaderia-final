@@ -12,20 +12,20 @@ import (
 )
 
 func main() {
-	// 1. Conectar a Base de Datos
+	
 	log.Println("🔌 Iniciando conexión a la base de datos...")
 	database.Connect()
 
-	// Validación de seguridad: Si la DB es nula, no podemos seguir
+	
 	if database.DB == nil {
-		log.Fatal("❌ Error Crítico: La base de datos es nil. El servidor se detendrá.")
+		log.Fatal("❌ Error Crítico: La base de datos es nil.")
 	}
 
 	r := gin.Default()
 
-	// 2. Configuración de CORS
+
 	r.Use(cors.New(cors.Config{
-		// IMPORTANTE: Agregamos "http://localhost" porque tu frontend Docker corre en puerto 80
+		
 		AllowOrigins:     []string{"http://localhost:4200", "http://localhost"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
@@ -34,15 +34,15 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	// 3. Rutas
 	api := r.Group("/api")
 	{
-		// Ruta PÚBLICA (Cualquiera puede intentar loguearse)
 		api.POST("/login", middleware.RateLimitMiddleware(), handlers.Login)
+		
+		// RUTA PARA PRODUCTOS
+		api.GET("/product", handlers.GetProducts) 
 
-		// Rutas PRIVADAS (Requieren Token)
 		protected := api.Group("/admin")
-		protected.Use(middleware.RequireAuth) // <--- Aquí aplicamos el candado
+		protected.Use(middleware.RequireAuth)
 		{
 			protected.POST("/users", handlers.CreateUser)
 		}

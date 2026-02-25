@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router'; // <--- 1. IMPORTAR ESTO
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  // 2. AGREGARLO AQUÍ (Esto hace que routerLink y routerLinkActiveOptions funcionen)
-  imports: [CommonModule, RouterModule], 
-  templateUrl: './navbar.html',
-  styleUrl: './navbar.css' // O .scss si usas sass
+  imports: [CommonModule, RouterModule],
+  templateUrl: './navbar.html', // Coincide con tu captura
+  styleUrl: './navbar.css'      // Coincide con tu captura
 })
 export class NavbarComponent {
   isMobileMenuOpen = false;

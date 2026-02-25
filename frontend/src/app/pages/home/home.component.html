@@ -1,8 +1,8 @@
 <div class="relative h-[85vh] flex items-center justify-center overflow-hidden">
   <div class="absolute inset-0 z-0">
-    <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80" 
-         class="w-full h-full object-cover transform scale-105" 
-         alt="Panadería Artesanal">
+    <img
+      src="https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
+      class="w-full h-full object-cover transform scale-105" alt="Panadería Artesanal">
     <div class="absolute inset-0 bg-black/50"></div>
   </div>
 
@@ -14,16 +14,19 @@
       El arte de hacer <br> <span class="text-bakery-gold">pan de verdad</span>
     </h1>
     <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto font-light animate-enter delay-200">
-      Utilizamos masa madre natural, fermentaciones lentas de 24 horas y harinas orgánicas para traerte el sabor que habías olvidado.
+      Utilizamos masa madre natural, fermentaciones lentas de 24 horas y harinas orgánicas para traerte el sabor que
+      habías olvidado.
     </p>
-    
+
     <div class="pt-8 flex flex-col sm:flex-row gap-4 justify-center animate-enter delay-300">
-      <button class="px-8 py-4 bg-bakery-gold text-bakery-brown font-bold rounded-full hover:bg-white transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-bakery-gold/50">
+      <a routerLink="/productos"
+        class="px-8 py-4 bg-bakery-gold text-bakery-brown font-bold rounded-full hover:bg-white transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-bakery-gold/50 no-underline inline-block">
         Ver Productos
-      </button>
-      <button class="px-8 py-4 border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-bakery-brown transition-all duration-300">
+      </a>
+      <a routerLink="/nosotros"
+        class="px-8 py-4 border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-bakery-brown transition-all duration-300 no-underline inline-block">
         Nuestra Historia
-      </button>
+      </a>
     </div>
   </div>
 </div>
@@ -31,26 +34,42 @@
 <section class="py-20 bg-bakery-cream">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-      
+
       <div class="space-y-4 group p-6 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300">
-        <div class="w-16 h-16 mx-auto bg-bakery-brown/10 rounded-full flex items-center justify-center text-bakery-brown group-hover:bg-bakery-brown group-hover:text-bakery-gold transition-colors duration-300">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <div
+          class="w-16 h-16 mx-auto bg-bakery-brown/10 rounded-full flex items-center justify-center text-bakery-brown group-hover:bg-bakery-brown group-hover:text-bakery-gold transition-colors duration-300">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
         </div>
         <h3 class="text-xl font-serif font-bold text-bakery-brown">Fermentación Lenta</h3>
-        <p class="text-gray-600">Dejamos reposar nuestra masa por más de 24 horas para lograr una digestión ligera y un sabor profundo.</p>
+        <p class="text-gray-600">Dejamos reposar nuestra masa por más de 24 horas para lograr una digestión ligera y un
+          sabor profundo.</p>
       </div>
 
       <div class="space-y-4 group p-6 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300">
-        <div class="w-16 h-16 mx-auto bg-bakery-brown/10 rounded-full flex items-center justify-center text-bakery-brown group-hover:bg-bakery-brown group-hover:text-bakery-gold transition-colors duration-300">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <div
+          class="w-16 h-16 mx-auto bg-bakery-brown/10 rounded-full flex items-center justify-center text-bakery-brown group-hover:bg-bakery-brown group-hover:text-bakery-gold transition-colors duration-300">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+            </path>
+          </svg>
         </div>
         <h3 class="text-xl font-serif font-bold text-bakery-brown">Ingredientes Orgánicos</h3>
-        <p class="text-gray-600">Trabajamos directamente con agricultores locales para obtener harinas libres de químicos.</p>
+        <p class="text-gray-600">Trabajamos directamente con agricultores locales para obtener harinas libres de
+          químicos.</p>
       </div>
 
       <div class="space-y-4 group p-6 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300">
-        <div class="w-16 h-16 mx-auto bg-bakery-brown/10 rounded-full flex items-center justify-center text-bakery-brown group-hover:bg-bakery-brown group-hover:text-bakery-gold transition-colors duration-300">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+        <div
+          class="w-16 h-16 mx-auto bg-bakery-brown/10 rounded-full flex items-center justify-center text-bakery-brown group-hover:bg-bakery-brown group-hover:text-bakery-gold transition-colors duration-300">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+            </path>
+          </svg>
         </div>
         <h3 class="text-xl font-serif font-bold text-bakery-brown">Hecho con Amor</h3>
         <p class="text-gray-600">Cada pieza es formada a mano por nuestros maestros panaderos cada madrugada.</p>

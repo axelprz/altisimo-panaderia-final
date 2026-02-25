@@ -1,0 +1,246 @@
+/* --- IMPORTACIÓN DE FUENTES --- */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400;500;600&display=swap');
+
+.container-detail {
+    max-width: 1200px;
+    margin: 120px auto;
+    padding: 0 40px;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: flex-start;
+}
+
+/* --- LADO IZQUIERDO: IMAGEN --- */
+.product-image {
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 100px;
+}
+
+.product-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+/* --- LADO DERECHO: INFO --- */
+.breadcrumb {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    color: #a0a0a0;
+    margin-bottom: 20px;
+}
+
+.breadcrumb a {
+    color: #C5A059;
+    text-decoration: none;
+}
+
+.product-info h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    color: #4A3728;
+    margin-bottom: 5px;
+}
+
+.price {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    font-weight: 500;
+    color: #C5A059;
+    margin-bottom: 25px;
+}
+
+.price small {
+    font-size: 1rem;
+    color: #888;
+    font-weight: 300;
+}
+
+.description {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1.05rem;
+}
+
+/* --- SELECTOR Y OPCIONES --- */
+.options-section label {
+    display: block;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #4A3728;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.custom-select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-family: 'Poppins', sans-serif;
+    background-color: white;
+    color: #4A3728;
+    outline: none;
+}
+
+/* --- MODIFICACIÓN: SELECTOR DE CANTIDAD COMPACTO Y TRANSPARENTE --- */
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 140px; /* Tamaño compacto como la foto */
+    border: 1px solid rgba(74, 55, 40, 0.2);
+    border-radius: 50px;
+    padding: 5px 15px;
+    background: rgba(255, 255, 255, 0.2); /* Transparencia de cristal */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.quantity-selector button {
+    background: none;
+    border: none;
+    width: 30px;
+    height: 30px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: #4A3728;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-selector input {
+    width: 40px;
+    border: none;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    background: transparent !important; /* Forzamos transparencia absoluta */
+    outline: none;
+    color: #4A3728;
+    box-shadow: none;
+    -webkit-appearance: none;
+}
+
+/* Quitar flechas por defecto del navegador */
+.quantity-selector input::-webkit-outer-spin-button,
+.quantity-selector input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.btn-add {
+    background-color: #4A3728;
+    color: white;
+    border: none;
+    padding: 18px 40px;
+    border-radius: 50px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.btn-add:hover {
+    background-color: #C5A059;
+    transform: translateY(-3px);
+}
+
+/* --- CARTEL FLOTANTE (TOAST) TRANSPARENTE --- */
+.toast-notification {
+    position: fixed;
+    bottom: -100px;
+    right: 30px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 15px 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-left: 5px solid #C5A059;
+    z-index: 10000;
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    opacity: 0;
+}
+
+.toast-notification.show {
+    bottom: 30px;
+    opacity: 1;
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.check-circle {
+    background: #C5A059;
+    color: white;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+}
+
+.toast-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    margin: 0;
+    color: #4A3728;
+}
+
+.toast-msg {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 992px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    .product-image {
+        position: relative;
+        top: 0;
+    }
+    .container-detail {
+        margin: 60px auto;
+        padding: 0 20px;
+    }
+}

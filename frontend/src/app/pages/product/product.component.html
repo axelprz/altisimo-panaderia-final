@@ -1,0 +1,25 @@
+<div class="header-products">
+  <div class="header-overlay">
+    <div class="header-content">
+      <h1>Nuestros Productos</h1>
+      <p>"Calidad artesanal en cada amasado, directo a tu mesa."</p>
+    </div>
+  </div>
+</div>
+
+<div class="products-container">
+  <div class="product-card" 
+       *ngFor="let product of products" 
+       [routerLink]="['/producto', product.id]" 
+       style="cursor: pointer;">
+    
+    <div class="image-wrapper">
+      <img [src]="product.images" [alt]="product.name">
+      <div class="info-overlay">
+        <span>+ info</span>
+      </div>
+    </div>
+    
+    <p class="product-name">{{ product.name }}</p>
+  </div>
+</div>

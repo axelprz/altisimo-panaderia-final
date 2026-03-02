@@ -16,7 +16,6 @@ var DB *gorm.DB
 func Connect() {
 	var err error
 
-
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=America/Argentina/Buenos_Aires",
 		os.Getenv("DB_HOST"),
@@ -26,7 +25,6 @@ func Connect() {
 		os.Getenv("DB_PORT"),
 	)
 
-	
 	for i := 0; i < 10; i++ {
 		DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 		if err == nil {
@@ -42,5 +40,6 @@ func Connect() {
 	}
 
 	// Migración automática de tablas
-	DB.AutoMigrate(&models.User{}, &models.Product{})
+	// Asegúrate de que Order y OrderItem estén aquí
+	DB.AutoMigrate(&models.User{}, &models.Product{}, &models.CartItem{}, &models.Order{}, &models.OrderItem{}, &models.Employee{})
 }

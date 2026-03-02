@@ -1,0 +1,137 @@
+<div class="min-h-screen bg-bakery-cream/30 pt-32 pb-20 px-4 sm:px-6 lg:px-8 font-sans">
+  <div class="max-w-7xl mx-auto">
+    
+    <div *ngIf="!orderSuccess" class="mb-12 animate-enter">
+      <h1 class="font-serif text-4xl sm:text-6xl font-bold text-bakery-brown tracking-tight">Tu Selección</h1>
+      <div class="h-1.5 w-20 bg-bakery-gold mt-3 rounded-full"></div>
+      <p class="text-gray-500 mt-4 font-medium italic">Un último vistazo a tus delicias artesanales antes del horneado.</p>
+    </div>
+
+    <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-24 animate-enter">
+      <div class="relative">
+        <div class="absolute inset-0 bg-bakery-gold/20 rounded-full blur-xl animate-pulse"></div>
+        <svg class="animate-spin h-12 w-12 text-bakery-gold relative" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+      <p class="mt-4 font-serif italic text-bakery-brown">Preparando tu pedido...</p>
+    </div>
+
+    <div *ngIf="!isLoading && cartItems.length === 0 && !orderSuccess" class="bg-white rounded-[3rem] p-16 text-center shadow-xl shadow-bakery-brown/5 border border-gray-100 animate-enter">
+      <div class="w-32 h-32 bg-bakery-cream rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+        <svg class="w-14 h-14 text-bakery-gold/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+        </svg>
+      </div>
+      <h2 class="font-serif text-3xl font-bold text-bakery-brown mb-3">Tu canasta está esperando</h2>
+      <p class="text-gray-500 mb-10 max-w-md mx-auto">Parece que aún no has agregado ninguna de nuestras especialidades recién salidas del horno.</p>
+      <a routerLink="/productos" class="group relative inline-flex items-center justify-center px-10 py-4 bg-bakery-brown text-white font-black rounded-full transition-all duration-300 hover:bg-bakery-gold hover:text-bakery-brown shadow-lg overflow-hidden">
+        <span class="relative z-10">Explorar la Boutique</span>
+        <div class="absolute inset-0 bg-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+      </a>
+    </div>
+
+    <div *ngIf="orderSuccess" class="bg-white rounded-[3rem] p-10 sm:p-20 text-center shadow-2xl border border-green-50 animate-enter">
+      <div class="relative inline-block mb-8">
+        <div class="absolute inset-0 bg-green-200 rounded-full blur-3xl opacity-30"></div>
+        <div class="relative w-28 h-28 bg-green-50 rounded-full flex items-center justify-center mx-auto text-green-500 shadow-inner">
+          <svg class="w-14 h-14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+      </div>
+      <h2 class="font-serif text-4xl font-bold text-bakery-brown mb-6">¡Pedido recibido con éxito!</h2>
+      <div class="max-w-2xl mx-auto space-y-4 mb-12">
+        <p class="text-gray-600 text-xl font-medium">Tu orden ha sido enviada a nuestros maestros panaderos y está en espera de confirmación.</p>
+        <p class="text-gray-500">En breve te notificaremos cuando comencemos a preparar tus delicias.</p>
+      </div>
+      <a routerLink="/" class="px-12 py-4 bg-bakery-brown text-white font-bold rounded-full hover:bg-bakery-gold transition-all shadow-xl hover:-translate-y-1">
+        Volver al Inicio
+      </a>
+    </div>
+
+    <div *ngIf="!isLoading && cartItems.length > 0 && !orderSuccess" class="flex flex-col lg:flex-row gap-12">
+      
+      <div class="flex-1 space-y-8 animate-enter delay-100">
+        <div *ngFor="let item of cartItems" class="group relative bg-white p-6 sm:p-8 rounded-[2.5rem] shadow-sm border border-gray-100 flex flex-col sm:flex-row items-center gap-8 transition-all duration-500 hover:shadow-xl hover:-translate-y-1">
+          
+          <div class="w-full sm:w-40 h-40 rounded-[2rem] overflow-hidden shrink-0 bg-gray-50 shadow-inner">
+            <img [src]="item.product.img" [alt]="item.product.name" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+          </div>
+          
+          <div class="flex-1 w-full text-center sm:text-left space-y-2">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+              <h3 class="font-serif text-3xl font-bold text-bakery-brown leading-none">{{ item.product.name }}</h3>
+              <span class="font-mono text-xl font-black text-bakery-brown">${{ item.product.price * item.quantity }}</span>
+            </div>
+            
+            <p *ngIf="item.variedad" class="inline-block text-[10px] font-black text-bakery-gold uppercase tracking-[0.2em] bg-bakery-gold/5 px-3 py-1 rounded-full border border-bakery-gold/10">
+              {{ item.variedad }}
+            </p>
+            <p class="text-gray-400 text-sm font-medium">Precio unitario: ${{ item.product.price }}</p>
+
+            <div class="mt-6 flex items-center justify-center sm:justify-start gap-4">
+              <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Cantidad</span>
+              <div class="flex items-center gap-4 bg-bakery-cream/30 rounded-2xl p-1.5 border border-gray-100">
+                <button (click)="decreaseQuantity(item)" class="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-bakery-brown hover:bg-bakery-brown hover:text-white transition-all shadow-sm">
+                  <span class="font-bold text-lg">−</span>
+                </button>
+                <span class="w-8 text-center font-serif text-xl font-bold text-bakery-brown select-none">{{ item.quantity }}</span>
+                <button (click)="increaseQuantity(item)" class="w-8 h-8 rounded-xl bg-white flex items-center justify-center text-bakery-brown hover:bg-bakery-brown hover:text-white transition-all shadow-sm">
+                  <span class="font-bold text-lg">+</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button (click)="removeItem(item.ID)" class="absolute top-6 right-6 sm:relative sm:top-auto sm:right-auto p-3 text-red-300 hover:text-red-500 bg-red-50 sm:bg-transparent rounded-full transition-colors group/del">
+            <svg class="w-6 h-6 transition-transform group-hover/del:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div> 
+
+      <div class="w-full lg:w-[400px] shrink-0 animate-enter delay-200">
+        <div class="bg-white p-10 rounded-[3rem] shadow-2xl border border-gray-50 sticky top-32">
+          <h3 class="font-serif text-3xl font-bold text-bakery-brown border-b border-gray-50 pb-6 mb-8">Resumen</h3>
+          
+          <div class="space-y-6 mb-10">
+            <div class="flex justify-between text-gray-500 font-medium">
+              <span>Subtotal del pedido</span>
+              <span class="text-bakery-brown font-bold">${{ total }}</span>
+            </div>
+            <div class="flex justify-between text-gray-500 font-medium">
+              <span>Envío / Entrega</span>
+              <span class="text-bakery-gold italic">A coordinar</span>
+            </div>
+          </div>
+
+          <div class="border-t border-dashed border-gray-200 pt-8 mb-10 flex justify-between items-end">
+            <div>
+              <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Total a Invertir</span>
+              <span class="font-serif text-5xl font-black text-bakery-brown tracking-tighter">
+                <span class="text-xl text-bakery-gold mr-1">$</span>{{ total }}
+              </span>
+            </div>
+          </div>
+
+          <button (click)="procederAlPago()" [disabled]="isCheckingOut" 
+                  class="group relative w-full h-16 bg-bakery-brown text-white rounded-2xl font-black text-lg shadow-xl shadow-bakery-brown/20 transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-70 overflow-hidden">
+            <div class="relative z-10 flex items-center justify-center gap-3">
+              <svg *ngIf="isCheckingOut" class="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              {{ isCheckingOut ? 'Transmitiendo...' : 'Finalizar Encargo' }}
+            </div>
+            <div class="absolute inset-0 bg-bakery-gold transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+          </button>
+          
+          <p class="text-center text-[10px] text-gray-400 uppercase tracking-widest mt-6 font-bold">
+            Transacción Segura · Panadería Altísimo
+          </p>
+        </div>
+      </div> 
+      
+    </div> 
+  </div>
+</div>

@@ -1,0 +1,211 @@
+<div class="relative bg-white p-4 sm:p-8 rounded-2xl shadow-sm border border-gray-100 animate-enter delay-100">
+  
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-800 tracking-tight">Gestión de Empleados</h2>
+      <p class="text-sm text-gray-500 mt-1">Administra el acceso y roles de tu equipo.</p>
+    </div>
+    <button (click)="openModal()" 
+            class="w-full sm:w-auto flex justify-center items-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium shadow-md hover:bg-blue-700 hover:shadow-lg transform active:scale-95 transition-all duration-200 shrink-0">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+      Nuevo Empleado
+    </button>
+  </div>
+
+  <div class="flex flex-col md:flex-row gap-4 mb-6 bg-gray-50 p-4 rounded-xl border border-gray-100 animate-enter delay-200">
+    <div class="relative flex-1">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      </div>
+      <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="applyFilters()"
+             placeholder="Buscar empleado..." 
+             class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm">
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+      <div class="w-full sm:w-48 relative">
+        <select [(ngModel)]="filterRole" (ngModelChange)="applyFilters()"
+                class="w-full py-2.5 px-4 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer shadow-sm">
+          <option value="">Todos los Roles</option>
+          <option value="Panadero">Panadero</option>
+          <option value="Atención al Cliente">Atención al Cliente</option>
+          <option value="Repartidor">Repartidor</option>
+          <option value="Administrador">Administrador</option>
+        </select>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </div>
+      </div>
+
+      <div class="w-full sm:w-48 relative">
+        <select [(ngModel)]="filterStatus" (ngModelChange)="applyFilters()"
+                class="w-full py-2.5 px-4 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 outline-none appearance-none cursor-pointer shadow-sm">
+          <option value="">Todos los Estados</option>
+          <option value="active">Solo Activos</option>
+          <option value="inactive">Solo Inactivos</option>
+        </select>
+        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7-7-7-7"></path></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overflow-x-auto rounded-xl border border-gray-200 animate-enter delay-300">
+    <table class="w-full text-left border-collapse min-w-[600px]">
+      <thead>
+        <tr class="bg-gray-50 text-gray-600 uppercase text-xs tracking-wider">
+          <th class="p-4 font-semibold">Nombre y Apellido</th>
+          <th class="p-4 font-semibold">DNI</th>
+          <th class="p-4 font-semibold">Rol</th>
+          <th class="p-4 font-semibold">Estado</th>
+          <th class="p-4 font-semibold text-right">Acciones</th>
+        </tr>
+      </thead>
+      
+      <tbody *ngIf="isLoading">
+        <tr>
+          <td colspan="5" class="p-8 text-center text-gray-400">
+            <div class="flex justify-center items-center gap-2">
+              <svg class="animate-spin h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+              Cargando empleados...
+            </div>
+          </td>
+        </tr>
+      </tbody>
+
+      <tbody *ngIf="!isLoading">
+        <tr *ngFor="let emp of filteredEmployees" class="border-t border-gray-100 hover:bg-gray-50 transition-colors duration-200">
+          <td class="p-4 font-medium text-gray-800 whitespace-nowrap">{{ emp.name }} {{ emp.last_name }}</td>
+          <td class="p-4 text-gray-600 whitespace-nowrap">{{ emp.dni }}</td>
+          <td class="p-4 whitespace-nowrap">
+            <span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full border border-gray-200">
+              {{ emp.role }}
+            </span>
+          </td>
+          <td class="p-4 whitespace-nowrap">
+            <div class="flex items-center gap-2">
+              <div class="w-2.5 h-2.5 rounded-full" [ngClass]="emp.is_active ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]'"></div>
+              <span class="text-sm font-medium" [ngClass]="emp.is_active ? 'text-green-700' : 'text-red-700'">
+                {{ emp.is_active ? 'Activo' : 'Inactivo' }}
+              </span>
+            </div>
+          </td>
+          <td class="p-4 flex justify-end gap-3">
+            <button (click)="openModal(emp)" class="p-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 hover:scale-105 transition-all shadow-sm" title="Editar">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+            </button>
+            <button (click)="deleteEmployee(emp.ID!)" class="p-2 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 hover:scale-105 transition-all shadow-sm" title="Eliminar">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            </button>
+          </td>
+        </tr>
+        
+        <tr *ngIf="filteredEmployees.length === 0">
+          <td colspan="5" class="p-8 sm:p-12 text-center">
+            <div class="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gray-50 mb-4">
+              <svg *ngIf="searchTerm || filterRole || filterStatus" class="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+              <svg *ngIf="!searchTerm && !filterRole && !filterStatus" class="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            </div>
+            <h3 class="text-base sm:text-lg font-medium text-gray-900">
+              {{ (searchTerm || filterRole || filterStatus) ? 'Sin resultados' : 'Sin empleados' }}
+            </h3>
+            <p class="mt-1 text-xs sm:text-sm text-gray-500">
+              {{ (searchTerm || filterRole || filterStatus) ? 'Intenta ajustando los filtros de búsqueda.' : 'Comienza agregando un nuevo miembro al equipo.' }}
+            </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
+  <div class="absolute inset-0 bg-gray-900 transition-opacity duration-300 ease-in-out" 
+       [ngClass]="animateModal ? 'opacity-60 backdrop-blur-sm' : 'opacity-0'"
+       (click)="closeModal()"></div>
+  
+  <div class="relative bg-white p-5 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-out"
+       [ngClass]="animateModal ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95'">
+    
+    <div class="flex justify-between items-center mb-5 sm:mb-6 border-b border-gray-100 pb-3 sm:pb-4">
+      <h3 class="text-lg sm:text-xl font-bold text-gray-800">{{ isEditing ? 'Editar Empleado' : 'Nuevo Empleado' }}</h3>
+      <button (click)="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-md hover:bg-gray-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    
+    <form [formGroup]="employeeForm" (ngSubmit)="saveEmployee()" class="space-y-4 sm:space-y-5">
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-1">Nombre</label>
+          <input formControlName="name" type="text" 
+                 [ngClass]="{'border-red-500 focus:ring-red-500': f['name'].invalid && f['name'].touched}"
+                 class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none">
+          <span *ngIf="f['name'].errors?.['required'] && f['name'].touched" class="text-xs text-red-500 mt-1 block">El nombre es obligatorio.</span>
+        </div>
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-1">Apellido</label>
+          <input formControlName="last_name" type="text" 
+                 [ngClass]="{'border-red-500 focus:ring-red-500': f['last_name'].invalid && f['last_name'].touched}"
+                 class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none">
+          <span *ngIf="f['last_name'].errors?.['required'] && f['last_name'].touched" class="text-xs text-red-500 mt-1 block">El apellido es obligatorio.</span>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-1">Documento (DNI)</label>
+        <input formControlName="dni" type="text" placeholder="Ej: 38123456"
+               [ngClass]="{'border-red-500 focus:ring-red-500': f['dni'].invalid && f['dni'].touched}"
+               class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none">
+        <span *ngIf="f['dni'].errors?.['required'] && f['dni'].touched" class="text-xs text-red-500 mt-1 block">El DNI es obligatorio.</span>
+        <span *ngIf="f['dni'].errors?.['pattern'] && f['dni'].touched" class="text-xs text-red-500 mt-1 block">Debe contener entre 7 y 8 números.</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-1">Rol</label>
+          <select formControlName="role" class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none appearance-none cursor-pointer">
+            <option value="Panadero">Panadero</option>
+            <option value="Atención al Cliente">Atención al Cliente</option>
+            <option value="Repartidor">Repartidor</option>
+            <option value="Administrador">Administrador</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs uppercase tracking-wider text-gray-500 font-semibold mb-1">Teléfono</label>
+          <input formControlName="phone" type="text" placeholder="Ej: 2615123456"
+                 [ngClass]="{'border-red-500 focus:ring-red-500': f['phone'].invalid && f['phone'].touched}"
+                 class="w-full bg-gray-50 border border-gray-200 text-gray-900 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none">
+          <span *ngIf="f['phone'].errors?.['required'] && f['phone'].touched" class="text-xs text-red-500 mt-1 block">Obligatorio.</span>
+          <span *ngIf="f['phone'].errors?.['pattern'] && f['phone'].touched" class="text-xs text-red-500 mt-1 block">Número inválido.</span>
+        </div>
+      </div>
+
+      <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200 mt-2">
+        <input formControlName="is_active" type="checkbox" id="status" class="w-4 h-4 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer">
+        <label for="status" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer select-none">Empleado activo</label>
+      </div>
+
+      <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 border-t border-gray-100">
+        <button type="button" (click)="closeModal()" class="w-full sm:w-auto px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-100 transition-all">
+          Cancelar
+        </button>
+        <button type="submit" [disabled]="employeeForm.invalid" class="w-full sm:w-auto px-5 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform active:scale-95">
+          {{ isEditing ? 'Guardar Cambios' : 'Crear Empleado' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="fixed bottom-5 right-5 left-5 sm:left-auto z-50 transition-all duration-300 ease-out transform pointer-events-none"
+     [ngClass]="showToast ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'">
+  <div class="flex items-center w-full sm:w-max max-w-sm p-4 text-gray-500 bg-white rounded-xl shadow-2xl border border-gray-100 mx-auto" role="alert">
+    <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg>
+    </div>
+    <div class="ml-3 text-sm font-semibold text-gray-800">{{ toastMessage }}</div>
+  </div>
+</div>

@@ -1,58 +1,93 @@
-<div class="container-detail" *ngIf="product">
-  <div class="product-grid">
-    <div class="product-image">
-      <img [src]="product.img" [alt]="product.name">
+<div class="min-h-screen bg-bakery-cream pt-32 pb-20 px-4 sm:px-6 lg:px-8 font-sans">
+  
+  <div *ngIf="isLoading" class="flex justify-center items-center py-20 animate-enter">
+    <div class="flex flex-col items-center gap-4 text-gray-500">
+      <svg class="animate-spin h-10 w-10 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+      <p class="font-serif text-lg">Buscando producto...</p>
     </div>
+  </div>
 
-    <div class="product-info">
-      <nav class="breadcrumb">
-        <a routerLink="/productos">Productos</a> / {{ product.name }}
-      </nav>
-
-      <h1>{{ product.name }}</h1>
+  <div *ngIf="!isLoading && product" class="max-w-6xl mx-auto">
+    
+    <div class="flex flex-col md:flex-row gap-12 lg:gap-20">
       
-      <p class="price">
-        ${{ precioCalculado }} 
-        <small>por {{ product.unidad }}</small>
-      </p>
-
-      <p class="description">{{ product.desc }}</p>
-
-      <div class="options-section" *ngIf="product.variedades">
-        <label>Seleccione Variedad:</label>
-        <select [(ngModel)]="variedadSeleccionada" class="custom-select">
-          <option *ngFor="let v of product.variedades" [ngValue]="v">
-            {{ v.nombre }} <span *ngIf="v.extra > 0">(+ ${{v.extra}})</span>
-          </option>
-        </select>
+      <div class="w-full md:w-1/2 animate-enter delay-100">
+        <div class="rounded-3xl overflow-hidden shadow-xl bg-white aspect-square relative group">
+          <img [src]="formatImageUrl(product.img)" [alt]="product.name" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+        </div>
       </div>
 
-      <div class="purchase-actions">
-        <div class="quantity-group">
-          <label class="quantity-label">Cantidad en {{ product.unidad }}:</label>
-          <div class="quantity-selector">
-            <button (click)="cantidad = cantidad > 1 ? cantidad - 1 : 1">−</button>
-            <input type="number" [(ngModel)]="cantidad" min="1" readonly>
-            <button (click)="cantidad = cantidad + 1">+</button>
+      <div class="w-full md:w-1/2 flex flex-col justify-center animate-enter delay-200">
+        
+        <nav class="text-sm text-gray-400 mb-6 font-medium tracking-wide">
+          <a routerLink="/productos" class="hover:text-yellow-600 transition-colors">Productos</a> 
+          <span class="mx-2">/</span> 
+          <span class="text-gray-600">{{ product.name }}</span>
+        </nav>
+
+        <h1 class="font-serif text-4xl sm:text-5xl font-bold text-gray-900 mb-4">{{ product.name }}</h1>
+        
+        <div class="flex items-end gap-2 mb-6">
+          <p class="font-sans text-4xl font-extrabold text-yellow-600">${{ product.price }}</p>
+          <span class="text-gray-500 font-medium mb-1">por {{ product.unidad }}</span>
+        </div>
+
+        <p class="text-gray-600 text-lg mb-10 leading-relaxed border-l-4 border-yellow-200 pl-4">
+          {{ product.desc }}
+        </p>
+
+        <div class="mb-8" *ngIf="product.variedades && product.variedades.length > 0">
+          <label class="block text-sm font-bold text-gray-700 uppercase tracking-wider mb-3">Seleccione Variedad</label>
+          <div class="relative">
+            <select [(ngModel)]="variedadSeleccionada" class="w-full appearance-none bg-white border border-gray-200 text-gray-700 py-4 px-5 rounded-2xl leading-tight focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent cursor-pointer font-medium shadow-sm transition-all">
+              <option *ngFor="let v of product.variedades" [ngValue]="v">{{ v }}</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-gray-500">
+              <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
           </div>
         </div>
 
-        <button class="btn-add" (click)="agregarAlCarrito()">
-          Encargar Pedido
-        </button>
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col gap-6">
+          
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-gray-700">Cantidad ({{ product.unidad }}s)</label>
+            <div class="flex items-center bg-gray-50 border border-gray-200 rounded-full p-1">
+              <button (click)="cantidad = cantidad > 1 ? cantidad - 1 : 1" class="w-10 h-10 flex items-center justify-center rounded-full text-gray-500 hover:bg-white hover:shadow transition-all font-bold text-xl outline-none">−</button>
+              <input type="number" [(ngModel)]="cantidad" min="1" readonly class="w-12 text-center bg-transparent font-bold text-gray-900 border-none focus:ring-0 p-0 select-none">
+              <button (click)="cantidad = cantidad + 1" class="w-10 h-10 flex items-center justify-center rounded-full text-gray-500 hover:bg-white hover:shadow transition-all font-bold text-xl outline-none">+</button>
+            </div>
+          </div>
+
+          <button (click)="agregarAlCarrito()" [disabled]="isAdding" class="w-full bg-gray-900 text-white py-4 rounded-full font-sans font-semibold text-lg hover:bg-yellow-600 transition-all shadow-md hover:shadow-xl transform active:scale-95 duration-200 disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2">
+            <svg *ngIf="!isAdding" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+            <svg *ngIf="isAdding" class="animate-spin h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            {{ isAdding ? 'Agregando...' : 'Encargar Pedido' }}
+          </button>
+        </div>
+
       </div>
     </div>
   </div>
+
+  <div *ngIf="!isLoading && !product" class="text-center py-20 animate-enter">
+    <h2 class="text-3xl font-serif font-bold text-gray-800 mb-4">Producto no encontrado</h2>
+    <p class="text-gray-500 mb-8">El producto que buscas ya no está disponible o la URL es incorrecta.</p>
+    <a routerLink="/productos" class="inline-block bg-yellow-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-gray-900 transition-colors">Volver al catálogo</a>
+  </div>
+
 </div>
 
-<div class="toast-notification" [class.show]="mostrarNotificacion">
-  <div class="toast-content">
-    <div class="check-circle">✓</div>
-    <div class="toast-text">
-      <p class="toast-title">¡Pedido Agregado!</p>
-      <p class="toast-msg">
-        {{ cantidad }} {{ product.unidad }}(s) de {{ product.name }} 
-        <span *ngIf="variedadSeleccionada">({{ variedadSeleccionada.nombre }})</span>
+<div class="fixed bottom-6 right-6 z-50 transition-all duration-500 transform" 
+     [ngClass]="mostrarNotificacion ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'">
+  <div class="bg-white rounded-2xl shadow-2xl border-l-4 border-green-500 p-4 pr-8 flex items-center gap-4">
+    <div class="bg-green-100 rounded-full p-2 text-green-500">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    </div>
+    <div>
+      <p class="font-bold text-gray-900 text-sm">¡Pedido Agregado!</p>
+      <p class="text-gray-500 text-sm mt-0.5">
+        {{ cantidad }}x {{ product?.name }} <span *ngIf="variedadSeleccionada">({{ variedadSeleccionada }})</span>
       </p>
     </div>
   </div>

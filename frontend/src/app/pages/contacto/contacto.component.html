@@ -1,40 +1,86 @@
-<div class="header-contacto">
-  <div class="header-overlay">
-    <div class="header-content">
-      <h1>Contactanos</h1>
-      <p>"Calidad artesanal en cada amasado, directo a tu mesa."</p>
-    </div>
+<div class="relative h-[60vh] flex items-center justify-center overflow-hidden">
+  <div class="absolute inset-0 z-0">
+    <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" 
+         class="w-full h-full object-cover scale-110 motion-safe:animate-[pulse_10s_infinite]" alt="Panadería Fondo">
+    <div class="absolute inset-0 bg-bakery-brown/60 backdrop-blur-[2px]"></div>
+  </div>
+
+  <div class="relative z-10 text-center px-4 animate-enter">
+    <h1 class="text-5xl md:text-7xl font-serif font-bold text-white mb-6 drop-shadow-lg">
+      Contactanos
+    </h1>
+    <div class="h-1.5 w-24 bg-bakery-gold mx-auto mb-6 rounded-full"></div>
+    <p class="text-bakery-cream text-lg md:text-xl font-medium max-w-2xl mx-auto italic drop-shadow">
+      "Calidad artesanal en cada amasado, directo a tu mesa."
+    </p>
   </div>
 </div>
 
-<div class="contacto-container">
-  <div class="contact-grid">
+<div class="max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
     
-    <div class="contact-card">
-      <div class="icon-circle">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    <div class="group bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100 text-center transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 animate-enter delay-100">
+      <div class="mb-8 relative inline-block">
+        <div class="absolute inset-0 bg-bakery-gold/20 rounded-full blur-xl group-hover:blur-2xl transition-all"></div>
+        <div class="relative w-20 h-20 bg-bakery-cream rounded-full flex items-center justify-center text-bakery-brown mx-auto shadow-inner transition-transform duration-500 group-hover:rotate-[360deg]">
+          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+        </div>
       </div>
-      <h3>Ventas Minoristas</h3>
-      <a href="tel:+5492634512233" class="phone-number">+54 9 263 451-2233</a>
-      <span class="person-name">Atendido por: Sofía</span>
+      <h3 class="text-2xl font-serif font-bold text-bakery-brown mb-4 tracking-tight">Ventas Minoristas</h3>
+      <div class="space-y-4">
+        <a href="tel:+5492634512233" class="block text-xl font-bold text-gray-900 hover:text-bakery-gold transition-colors duration-300">
+          +54 9 263 451-2233
+        </a>
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-50 rounded-full border border-gray-100">
+          <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          <span class="text-sm font-semibold text-gray-500 uppercase tracking-widest">Sofía</span>
+        </div>
+      </div>
     </div>
 
-    <div class="contact-card">
-      <div class="icon-circle">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    <div class="group bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100 text-center transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 animate-enter delay-200">
+      <div class="mb-8 relative inline-block">
+        <div class="absolute inset-0 bg-bakery-gold/20 rounded-full blur-xl group-hover:blur-2xl transition-all"></div>
+        <div class="relative w-20 h-20 bg-bakery-cream rounded-full flex items-center justify-center text-bakery-brown mx-auto shadow-inner transition-transform duration-500 group-hover:rotate-[360deg]">
+          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 15.5a5 5 0 11-10 0 5 5 0 0110 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 7l3 3-3 3m0-6l-3 3 3 3"></path>
+          </svg>
+        </div>
       </div>
-      <h3>Pedidos Especiales</h3>
-      <a href="tel:+5492634657788" class="phone-number">+54 9 263 465-7788</a>
-      <span class="person-name">Atendido por: Mateo</span>
+      <h3 class="text-2xl font-serif font-bold text-bakery-brown mb-4 tracking-tight">Pedidos Especiales</h3>
+      <div class="space-y-4">
+        <a href="tel:+5492634657788" class="block text-xl font-bold text-gray-900 hover:text-bakery-gold transition-colors duration-300">
+          +54 9 263 465-7788
+        </a>
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-50 rounded-full border border-gray-100">
+          <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          <span class="text-sm font-semibold text-gray-500 uppercase tracking-widest">Mateo</span>
+        </div>
+      </div>
     </div>
 
-    <div class="contact-card">
-      <div class="icon-circle">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    <div class="group bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100 text-center transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 animate-enter delay-300">
+      <div class="mb-8 relative inline-block">
+        <div class="absolute inset-0 bg-bakery-gold/20 rounded-full blur-xl group-hover:blur-2xl transition-all"></div>
+        <div class="relative w-20 h-20 bg-bakery-cream rounded-full flex items-center justify-center text-bakery-brown mx-auto shadow-inner transition-transform duration-500 group-hover:rotate-[360deg]">
+          <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
       </div>
-      <h3>Ventas Mayoristas</h3>
-      <a href="tel:+5492634201144" class="phone-number">+54 9 263 420-1144</a>
-      <span class="person-name">Atendido por: Lucía</span>
+      <h3 class="text-2xl font-serif font-bold text-bakery-brown mb-4 tracking-tight">Ventas Mayoristas</h3>
+      <div class="space-y-4">
+        <a href="tel:+5492634201144" class="block text-xl font-bold text-gray-900 hover:text-bakery-gold transition-colors duration-300">
+          +54 9 263 420-1144
+        </a>
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-gray-50 rounded-full border border-gray-100">
+          <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          <span class="text-sm font-semibold text-gray-500 uppercase tracking-widest">Lucía</span>
+        </div>
+      </div>
     </div>
 
   </div>

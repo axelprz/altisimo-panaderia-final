@@ -40,5 +40,15 @@ services:
     depends_on:
       - backend
 
+  admin-frontend:
+    build:
+      context: ./admin-frontend
+    container_name: emprendimiento-admin-frontend
+    restart: always
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:

@@ -10,24 +10,51 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnInit {
-  passwordForm!: FormGroup;
+  passwordForm: FormGroup;
   isLoading = false;
   successMessage = '';
   errorMessage = '';
-  userEmail = 'admin@altisimo.com'; // Puedes obtenerlo de tu AuthService si guardaste el email
+  
+  // Variables dinámicas para la interfaz
+  userEmail = ''; 
+  userRole = '';
+  userInitial = '';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService
-  ) {}
-
-  ngOnInit(): void {
-    // Inicializamos el formulario con validación cruzada para confirmar contraseña
+  ) {
+    // Inicializamos el formulario en el constructor
     this.passwordForm = this.fb.group({
       currentPassword: ['', Validators.required],
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
     }, { validators: this.passwordMatchValidator });
+  }
+
+  ngOnInit(): void {
+    this.loadUserData();
+  }
+
+  loadUserData() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        // Extraemos la parte central del JWT (el Payload)
+        const payload = token.split('.')[1];
+        // Decodificamos Base64Url a texto normal
+        const decodedInfo = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+        
+        // Asignamos los datos a nuestras variables
+        this.userEmail = decodedInfo.email || 'usuario@correo.com';
+        this.userRole = decodedInfo.role || 'client'; // Si no tiene rol, asumimos cliente
+        
+        // Sacamos la primera letra del correo para el ícono circular
+        this.userInitial = this.userEmail.charAt(0).toUpperCase();
+      } catch (e) {
+        console.error('Error al decodificar el token para el perfil', e);
+      }
+    }
   }
 
   // Validador personalizado para asegurar que las contraseñas coinciden

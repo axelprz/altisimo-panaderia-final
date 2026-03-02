@@ -1,0 +1,64 @@
+<div class="flex h-screen bg-bakery-cream overflow-hidden">
+  
+  <div *ngIf="isSidebarOpen" 
+       class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-20 md:hidden transition-opacity"
+       (click)="closeSidebar()"></div>
+
+  <aside class="fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 text-white flex flex-col transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 shadow-2xl md:shadow-none"
+         [ngClass]="isSidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+    
+    <div class="flex items-center justify-between p-6 border-b border-gray-800">
+      <span class="text-2xl font-bold tracking-wider font-serif">Altísimo<span class="text-blue-500">.</span></span>
+      <button (click)="closeSidebar()" class="md:hidden text-gray-400 hover:text-white transition-colors p-1">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    
+    <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+      <a routerLink="/dashboard" routerLinkActive="bg-blue-600 text-white shadow-lg" 
+         class="flex items-center gap-3 py-3 px-4 rounded-xl text-gray-400 hover:bg-gray-800 hover:text-white transition-all" 
+         (click)="closeSidebar()">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+        <span class="font-medium">Dashboard</span>
+      </a>
+
+      <a routerLink="/employees" routerLinkActive="bg-blue-600 text-white shadow-lg" 
+         class="flex items-center gap-3 py-3 px-4 rounded-xl text-gray-400 hover:bg-gray-800 hover:text-white transition-all" 
+         (click)="closeSidebar()">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        <span class="font-medium">Empleados</span>
+      </a>
+
+      <a routerLink="/orders" routerLinkActive="bg-blue-600 text-white shadow-lg" 
+         class="flex items-center gap-3 py-3 px-4 rounded-xl text-gray-400 hover:bg-gray-800 hover:text-white transition-all"
+         (click)="closeSidebar()">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+        <span class="font-medium">Pedidos</span>
+      </a>
+    </nav>
+    
+    <div class="p-4 border-t border-gray-800">
+      <button (click)="logout()" class="w-full flex justify-center items-center gap-2 bg-red-500/10 text-red-500 py-3 rounded-xl hover:bg-red-500 hover:text-white transition-all font-medium">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+        Cerrar Sesión
+      </button>
+    </div>
+  </aside>
+
+  <div class="flex-1 flex flex-col w-full h-full overflow-hidden relative">
+    
+    <header class="md:hidden bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200 z-10 flex items-center justify-between p-4 shrink-0 absolute top-0 left-0 right-0 h-16">
+      <button (click)="toggleSidebar()" class="text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors rounded-lg p-2 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+      <span class="text-lg font-bold text-gray-800 tracking-tight font-serif">Panel Admin</span>
+      <div class="w-10"></div> </header>
+
+    <main class="flex-1 overflow-y-auto w-full pt-20 md:pt-6 p-4 md:p-8 bg-transparent">
+      <div class="max-w-7xl mx-auto">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+
+</div>

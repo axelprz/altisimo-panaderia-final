@@ -4,8 +4,9 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Email    string `gorm:"uniqueIndex;not null" json:"email"`
-	Password string `json:"-"` // Nunca devolvemos el password en el JSON
+	Email    string `json:"email" gorm:"unique"`
+	Password string `json:"-"`                            // El "-" oculta la contraseña cuando enviamos el JSON a Angular
+	Role     string `json:"role" gorm:"default:'client'"` // <-- ¡ESTE ES EL CAMPO CLAVE!
 }
 
 // Estructuras auxiliares para recibir datos del login

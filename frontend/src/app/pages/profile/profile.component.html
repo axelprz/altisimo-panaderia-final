@@ -33,7 +33,47 @@
 
     <div class="lg:col-span-2 space-y-8">
       
-      <div class="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden transition-all hover:shadow-md">
+      <div class="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden transition-all hover:shadow-md animate-enter">
+        <div class="px-8 py-6 bg-gray-50/50 border-b border-gray-100 flex justify-between items-center">
+          <h3 class="text-lg font-bold text-bakery-brown flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.242-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            Libreta de Direcciones
+          </h3>
+          <button (click)="openAddressModal()" class="text-xs font-bold bg-bakery-brown text-white px-4 py-2 rounded-full hover:bg-bakery-gold hover:text-bakery-brown transition-colors shadow-sm">
+            + Nueva Dirección
+          </button>
+        </div>
+
+        <div class="p-8">
+          <div *ngIf="addresses.length === 0" class="text-center py-8 bg-gray-50 border border-dashed border-gray-200 rounded-2xl">
+            <svg class="w-10 h-10 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            <p class="text-gray-500 font-medium text-sm">Aún no tienes direcciones guardadas.</p>
+            <p class="text-xs text-gray-400 mt-1">Agrega una para agilizar tus futuros pedidos.</p>
+          </div>
+
+          <div *ngIf="addresses.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div *ngFor="let addr of addresses" class="p-5 border border-gray-200 bg-white rounded-2xl relative group hover:border-bakery-gold hover:shadow-md transition-all">
+              
+              <button (click)="confirmDeleteAddress(addr.ID)" class="absolute top-4 right-4 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity bg-white p-1 rounded-md" title="Eliminar">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+              </button>
+              
+              <h4 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                {{ addr.title }}
+                <span *ngIf="addr.is_default" class="bg-green-100 text-green-700 text-[9px] uppercase font-black px-2 py-0.5 rounded-full border border-green-200 tracking-wider">Principal</span>
+              </h4>
+              
+              <div class="space-y-1.5 text-sm text-gray-600">
+                <p class="flex items-start gap-2"><span class="text-gray-400 mt-0.5">📍</span> {{ addr.street }}, {{ addr.city }}</p>
+                <p class="flex items-center gap-2"><span class="text-gray-400">📞</span> {{ addr.phone }}</p>
+                <p *ngIf="addr.reference" class="text-xs text-gray-500 italic mt-2 border-l-2 border-bakery-gold/30 pl-2">"{{ addr.reference }}"</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-[2.5rem] shadow-sm border border-gray-100 overflow-hidden transition-all hover:shadow-md animate-enter delay-100">
         <div class="px-8 py-6 bg-gray-50/50 border-b border-gray-100">
           <h3 class="text-lg font-bold text-bakery-brown flex items-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
@@ -43,74 +83,113 @@
 
         <div class="p-8">
           <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()" class="space-y-6">
-            
             <div class="grid grid-cols-1 gap-6">
               <div class="space-y-2">
                 <label class="text-sm font-bold text-gray-700 ml-1 uppercase tracking-tighter">Contraseña Actual</label>
-                <input type="password" formControlName="currentPassword" 
-                       placeholder="••••••••"
-                       class="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:ring-2 focus:ring-bakery-gold/20 focus:border-bakery-gold focus:bg-white outline-none transition-all">
+                <input type="password" formControlName="currentPassword" placeholder="••••••••" class="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:ring-2 focus:ring-bakery-gold/20 focus:border-bakery-gold focus:bg-white outline-none transition-all">
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-2">
                   <label class="text-sm font-bold text-gray-700 ml-1 uppercase tracking-tighter">Nueva Contraseña</label>
-                  <input type="password" formControlName="newPassword" 
-                         placeholder="Mín. 6 caracteres"
-                         class="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:ring-2 focus:ring-bakery-gold/20 focus:border-bakery-gold focus:bg-white outline-none transition-all">
-                  <p *ngIf="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('minlength')" 
-                     class="text-[11px] text-red-500 font-bold ml-1 animate-enter">
-                    ⚠️ Debe tener al menos 6 caracteres.
-                  </p>
+                  <input type="password" formControlName="newPassword" placeholder="Mín. 6 caracteres" class="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:ring-2 focus:ring-bakery-gold/20 focus:border-bakery-gold focus:bg-white outline-none transition-all">
+                  <p *ngIf="passwordForm.get('newPassword')?.touched && passwordForm.get('newPassword')?.hasError('minlength')" class="text-[11px] text-red-500 font-bold ml-1 animate-enter">⚠️ Debe tener al menos 6 caracteres.</p>
                 </div>
 
                 <div class="space-y-2">
                   <label class="text-sm font-bold text-gray-700 ml-1 uppercase tracking-tighter">Confirmar Nueva</label>
-                  <input type="password" formControlName="confirmPassword" 
-                         placeholder="Repite la contraseña"
-                         class="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:ring-2 focus:ring-bakery-gold/20 focus:border-bakery-gold focus:bg-white outline-none transition-all">
-                  <p *ngIf="passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched" 
-                     class="text-[11px] text-red-500 font-bold ml-1 animate-enter">
-                    ⚠️ Las contraseñas no coinciden.
-                  </p>
+                  <input type="password" formControlName="confirmPassword" placeholder="Repite la contraseña" class="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm focus:ring-2 focus:ring-bakery-gold/20 focus:border-bakery-gold focus:bg-white outline-none transition-all">
+                  <p *ngIf="passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched" class="text-[11px] text-red-500 font-bold ml-1 animate-enter">⚠️ Las contraseñas no coinciden.</p>
                 </div>
               </div>
             </div>
 
-            <div *ngIf="successMessage" class="p-4 bg-green-50 text-green-700 text-sm font-bold rounded-2xl border border-green-100 flex items-center gap-3 animate-enter">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-              {{ successMessage }}
-            </div>
-            
-            <div *ngIf="errorMessage" class="p-4 bg-red-50 text-red-700 text-sm font-bold rounded-2xl border border-red-100 flex items-center gap-3 animate-enter">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
-              {{ errorMessage }}
-            </div>
-
-            <div class="pt-4">
+            <div class="pt-4 border-t border-gray-50">
               <button type="submit" [disabled]="passwordForm.invalid || isLoading" 
-                      class="w-full md:w-auto px-8 py-4 bg-bakery-brown text-white font-bold rounded-2xl hover:bg-bakery-gold transition-all duration-300 transform active:scale-95 disabled:opacity-50 disabled:active:scale-100 shadow-lg shadow-bakery-brown/20 flex items-center justify-center gap-2">
-                <svg *ngIf="isLoading" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                      class="w-full md:w-auto px-8 py-4 bg-bakery-brown text-white font-bold rounded-2xl hover:bg-bakery-gold hover:text-bakery-brown transition-all duration-300 transform active:scale-95 disabled:opacity-50 disabled:active:scale-100 shadow-lg shadow-bakery-brown/20 flex items-center justify-center gap-2">
+                <svg *ngIf="isLoading" class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                 {{ isLoading ? 'Guardando cambios...' : 'Actualizar Contraseña' }}
               </button>
             </div>
-
           </form>
         </div>
       </div>
 
-      <div class="bg-bakery-brown rounded-[2.5rem] p-8 text-white shadow-xl animate-enter delay-200">
-        <div class="flex items-center gap-4">
-          <div class="p-3 bg-white/10 rounded-2xl">
-            <svg class="w-8 h-8 text-bakery-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          </div>
-          <div>
-            <h4 class="font-serif font-bold text-xl">¿Necesitas ayuda?</h4>
-            <p class="text-white/70 text-sm">Si tienes problemas con tu cuenta, contacta con soporte técnico.</p>
-          </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showAddressModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" (click)="closeAddressModal()"></div>
+  
+  <div class="relative bg-white p-8 rounded-[2.5rem] shadow-2xl w-full max-w-lg transform transition-all animate-enter border border-gray-100">
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-serif font-bold text-bakery-brown">Nueva Dirección</h3>
+      <button (click)="closeAddressModal()" class="text-gray-400 hover:text-red-500 bg-gray-50 hover:bg-red-50 p-2 rounded-full transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+
+    <form [formGroup]="addressForm" (ngSubmit)="saveAddress()" class="space-y-5">
+      <div>
+        <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-black mb-2 ml-1">Etiqueta (Ej: Casa, Trabajo)</label>
+        <input type="text" formControlName="title" placeholder="¿Dónde es?" class="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-bakery-gold/20 focus:border-bakery-gold focus:bg-white outline-none transition-all">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2">
+          <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-black mb-2 ml-1">Calle y Altura</label>
+          <input type="text" formControlName="street" placeholder="Ej: San Martín 123" class="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-bakery-gold/20 focus:border-bakery-gold focus:bg-white outline-none transition-all">
         </div>
       </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-black mb-2 ml-1">Ciudad</label>
+          <input type="text" formControlName="city" class="w-full px-5 py-3.5 bg-gray-100 border border-gray-200 rounded-2xl text-sm font-bold text-gray-500 cursor-not-allowed outline-none" readonly>
+        </div>
+        <div>
+          <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-black mb-2 ml-1">Teléfono</label>
+          <input type="text" formControlName="phone" placeholder="Sin guiones" class="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-bold focus:ring-2 focus:ring-bakery-gold/20 focus:border-bakery-gold focus:bg-white outline-none transition-all">
+        </div>
+      </div>
+      <div>
+        <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-black mb-2 ml-1">Referencias (Opcional)</label>
+        <textarea formControlName="reference" rows="2" placeholder="Ej: Casa blanca con rejas..." class="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-bakery-gold/20 focus:border-bakery-gold focus:bg-white outline-none transition-all resize-none"></textarea>
+      </div>
+      <div class="pt-4 border-t border-gray-100">
+        <button type="submit" [disabled]="addressForm.invalid || isSavingAddress" class="w-full px-8 py-4 bg-bakery-brown text-white font-bold rounded-2xl hover:bg-bakery-gold transition-all duration-300 transform active:scale-95 disabled:opacity-50 disabled:active:scale-100 shadow-lg shadow-bakery-brown/20">
+          {{ isSavingAddress ? 'Guardando...' : 'Guardar Dirección' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
+<div *ngIf="showDeleteModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" (click)="cancelDelete()"></div>
+  <div class="relative bg-white p-8 rounded-[2.5rem] shadow-2xl w-full max-w-sm transform transition-all animate-enter text-center border border-gray-100">
+    <div class="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
     </div>
+    <h3 class="text-xl font-serif font-bold text-gray-900 mb-2">¿Eliminar dirección?</h3>
+    <p class="text-sm text-gray-500 font-medium mb-8">Esta acción no se puede deshacer. Los pedidos pasados no se verán afectados.</p>
+    <div class="flex flex-col sm:flex-row gap-3">
+      <button (click)="cancelDelete()" class="flex-1 py-3.5 rounded-full font-bold text-gray-600 bg-gray-50 hover:bg-gray-100 transition-colors">Cancelar</button>
+      <button (click)="processDelete()" class="flex-1 py-3.5 rounded-full font-bold text-white bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/20 transition-all active:scale-95">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div class="fixed bottom-8 right-8 left-8 sm:left-auto z-50 transition-all duration-500 ease-out transform pointer-events-none"
+     [ngClass]="showToast ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-10 opacity-0 scale-95'">
+  <div class="flex items-center w-full sm:w-max max-w-sm p-5 bg-gray-900 rounded-[1.5rem] shadow-2xl mx-auto" role="alert">
+    
+    <div *ngIf="toastType === 'success'" class="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-green-400 bg-green-400/10 rounded-xl">
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+    </div>
+    <div *ngIf="toastType === 'error'" class="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-red-400 bg-red-400/10 rounded-xl">
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+    </div>
+
+    <div class="ml-4 text-sm font-medium text-white tracking-wide">{{ toastMessage }}</div>
   </div>
 </div>

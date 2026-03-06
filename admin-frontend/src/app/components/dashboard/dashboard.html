@@ -1,70 +1,110 @@
-<div class="space-y-6">
+<div class="space-y-8 max-w-7xl mx-auto pb-12 font-sans">
   
-  <div class="animate-enter delay-100 mb-8">
-    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight font-serif">Resumen del Negocio</h2>
-    <p class="text-sm text-gray-500 mt-1">Monitorea las ventas y el estado de los pedidos en tiempo real.</p>
+  <div class="animate-enter mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div>
+      <h2 class="text-3xl sm:text-4xl font-serif font-bold text-bakery-brown tracking-tight">Panel de Control</h2>
+      <div class="h-1.5 w-16 bg-bakery-gold mt-3 rounded-full"></div>
+      <p class="text-gray-700 mt-3 font-medium">Monitorea el rendimiento de tu panadería en tiempo real.</p>
+    </div>
+    
+    <div class="inline-flex items-center gap-2 px-5 py-2.5 bg-white rounded-full shadow-md border border-gray-200 text-sm font-bold text-bakery-brown shrink-0">
+      <span class="relative flex h-3 w-3">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-600"></span>
+      </span>
+      Sistema Conectado
+    </div>
   </div>
 
-  <div *ngIf="isLoading" class="flex justify-center items-center py-20 animate-enter delay-200">
-    <div class="flex items-center gap-3 text-gray-500 font-medium">
-      <svg class="animate-spin h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-      Cargando métricas...
-    </div>
+  <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-32 animate-enter">
+    <svg class="animate-spin h-12 w-12 text-bakery-gold mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    <p class="font-bold text-lg text-bakery-brown">Calculando métricas...</p>
   </div>
 
   <div *ngIf="!isLoading && stats" class="space-y-8">
     
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-5 animate-enter delay-100 hover:shadow-md transition-shadow group">
-        <div class="p-4 rounded-xl bg-gradient-to-br from-blue-100 to-blue-50 text-blue-600 group-hover:scale-110 transition-transform">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <div class="relative overflow-hidden bg-bakery-brown p-8 rounded-[2rem] shadow-xl animate-enter hover:-translate-y-1 transition-transform duration-300 flex flex-col justify-between border-2 border-bakery-brown">
+        <div class="flex items-start justify-between mb-8">
+          <div class="p-3 bg-white/20 rounded-2xl text-white">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <span class="text-xs font-black text-white bg-bakery-gold px-4 py-1.5 rounded-full uppercase tracking-wider">Caja Real</span>
         </div>
         <div>
-          <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Ingresos Totales</p>
-          <p class="text-3xl font-extrabold text-gray-900">${{ stats.total_sales | number:'1.2-2' }}</p>
+          <p class="text-xs font-black uppercase tracking-[0.2em] text-bakery-gold mb-2">Ingresos (Cobrados)</p>
+          <p class="text-4xl sm:text-5xl font-serif font-bold text-white tracking-tight">
+            <span class="text-2xl text-bakery-gold mr-1">$</span>{{ stats.total_sales | number:'1.2-2' }}
+          </p>
         </div>
       </div>
 
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-5 animate-enter delay-200 hover:shadow-md transition-shadow group">
-        <div class="p-4 rounded-xl bg-gradient-to-br from-green-100 to-green-50 text-green-600 group-hover:scale-110 transition-transform">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <div class="bg-white p-8 rounded-[2rem] shadow-md border border-gray-200 animate-enter delay-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+        <div class="flex items-start justify-between mb-8">
+          <div class="p-3 bg-green-100 rounded-2xl text-green-700">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+          </div>
         </div>
         <div>
-          <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Pedidos Aceptados</p>
-          <p class="text-3xl font-extrabold text-gray-900">{{ stats.accepted_orders }}</p>
+          <p class="text-xs font-black uppercase tracking-[0.2em] text-gray-700 mb-2">En Preparación / Envío</p>
+          <p class="text-4xl sm:text-5xl font-serif font-bold text-gray-900 tracking-tight">{{ stats.accepted_orders }}</p>
         </div>
       </div>
 
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-5 animate-enter delay-300 hover:shadow-md transition-shadow group">
-        <div class="p-4 rounded-xl bg-gradient-to-br from-yellow-100 to-yellow-50 text-yellow-600 group-hover:scale-110 transition-transform">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <div class="bg-white p-8 rounded-[2rem] shadow-md border border-gray-200 animate-enter delay-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+        <div class="flex items-start justify-between mb-8">
+          <div class="p-3 bg-yellow-100 rounded-2xl text-yellow-700">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <span *ngIf="stats.pending_orders > 0" class="flex h-4 w-4 relative mt-2 mr-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-4 w-4 bg-red-500"></span>
+          </span>
         </div>
         <div>
-          <p class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Pedidos Pendientes</p>
-          <p class="text-3xl font-extrabold text-gray-900">{{ stats.pending_orders }}</p>
+          <p class="text-xs font-black uppercase tracking-[0.2em] text-gray-700 mb-2">Nuevos (Sin Revisar)</p>
+          <p class="text-4xl sm:text-5xl font-serif font-bold text-gray-900 tracking-tight">{{ stats.pending_orders }}</p>
         </div>
       </div>
+
     </div>
 
-    <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 animate-enter delay-500">
-      <h3 class="text-lg font-bold text-gray-800 mb-6">Distribución de Pedidos</h3>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-enter delay-300">
       
-      <div *ngIf="stats.accepted_orders === 0 && stats.pending_orders === 0" class="flex flex-col items-center justify-center py-10 sm:py-16 text-gray-400">
-        <div class="p-4 bg-gray-50 rounded-full mb-4">
-          <svg class="w-12 h-12 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-md border border-gray-200">
+        <div class="mb-6">
+          <h3 class="text-xl font-serif font-bold text-gray-900">Volumen Operativo</h3>
+          <p class="text-sm text-gray-500 mt-1">Comparativa directa de estados.</p>
         </div>
-        <h4 class="text-gray-700 font-medium text-lg">Sin datos suficientes</h4>
-        <p class="text-sm mt-1 text-center max-w-sm">Aún no hay pedidos registrados. El gráfico se generará automáticamente cuando los clientes comiencen a comprar.</p>
+        
+        <div *ngIf="stats.pending_orders === 0 && stats.accepted_orders === 0 && stats.delivered_orders === 0" class="h-64 flex items-center justify-center text-gray-400 font-medium">
+          Sin datos para mostrar.
+        </div>
+        
+        <div *ngIf="stats.pending_orders > 0 || stats.accepted_orders > 0 || stats.delivered_orders > 0" class="relative h-64 w-full">
+          <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></canvas>
+        </div>
       </div>
 
-      <div *ngIf="stats.accepted_orders > 0 || stats.pending_orders > 0" class="relative h-64 sm:h-80 w-full flex justify-center">
-        <canvas baseChart
-          [data]="pieChartData"
-          [options]="pieChartOptions"
-          [type]="'doughnut'">
-        </canvas>
+      <div class="bg-white p-8 rounded-[2.5rem] shadow-md border border-gray-200">
+        <div class="mb-6">
+          <h3 class="text-xl font-serif font-bold text-gray-900">Evolución de Ingresos</h3>
+          <p class="text-sm text-gray-500 mt-1">Dinero ingresado (pedidos entregados) últimos 7 días.</p>
+        </div>
+        
+        <div *ngIf="stats.daily_sales.length === 0" class="h-64 flex items-center justify-center text-gray-400 font-medium">
+          Aún no hay ventas finalizadas esta semana.
+        </div>
+
+        <div *ngIf="stats.daily_sales.length > 0" class="relative h-64 w-full">
+          <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType"></canvas>
+        </div>
       </div>
+
     </div>
 
   </div>

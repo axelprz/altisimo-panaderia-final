@@ -8,8 +8,9 @@ export interface Product {
   price: number;
   unidad: string;
   desc: string;
-  img: string;
-  variedades?: string[]; // Opcional, dependiendo de si lo guardas como JSON en Go
+  img?: string;          // Opcional por si no hay imagen
+  variedades?: string[]; // Opcional para variedades
+  is_active?: boolean;   // <-- ¡NUEVO! Crucial para filtrar los pausados
 }
 
 @Injectable({

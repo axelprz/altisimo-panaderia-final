@@ -1,63 +1,73 @@
-<div class="min-h-screen flex items-center justify-center bg-bakery-cream p-4 font-sans antialiased">
+<div class="min-h-screen flex items-center justify-center bg-bakery-cream/50 p-4 font-sans antialiased relative overflow-hidden">
   
-  <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100 animate-enter">
+  <div class="absolute top-0 left-0 w-64 h-64 bg-bakery-gold/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse"></div>
+  <div class="absolute bottom-0 right-0 w-64 h-64 bg-bakery-brown/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70"></div>
+
+  <div class="w-full max-w-md bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-gray-100 animate-enter relative z-10">
     
-    <div class="p-8 text-center bg-gray-900 border-b border-gray-800 animate-enter delay-100">
-      <h1 class="text-3xl sm:text-4xl font-bold tracking-wider font-serif text-white">Altísimo<span class="text-blue-500">.</span></h1>
-      <p class="text-gray-400 mt-2 text-xs sm:text-sm uppercase tracking-widest font-medium">Panel de Control</p>
+    <div class="p-10 text-center bg-bakery-brown border-b border-bakery-brown/80 animate-enter delay-100 relative overflow-hidden">
+      <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
+      
+      <h1 class="text-4xl sm:text-5xl font-bold tracking-tight font-serif text-white relative z-10">
+        Altísimo<span class="text-bakery-gold">.</span>
+      </h1>
+      <p class="text-bakery-gold/80 mt-3 text-xs sm:text-sm uppercase tracking-[0.3em] font-black relative z-10">Acceso Restringido</p>
     </div>
 
     <div class="p-8 sm:p-10">
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
         
         <div *ngIf="errorMessage" 
-             class="p-4 bg-red-50 border-l-4 border-red-500 text-red-800 text-sm rounded-r-xl flex items-start gap-3 shadow-inner animate-enter">
-          <svg class="w-5 h-5 shrink-0 text-red-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+             class="p-4 bg-red-50 border border-red-100 text-red-800 text-sm rounded-2xl flex items-start gap-3 shadow-inner animate-enter">
+          <div class="p-1.5 bg-red-100 rounded-full shrink-0">
+            <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+          </div>
           <div>
-            <p class="font-semibold">Error de acceso</p>
-            <p class="text-red-700">{{ errorMessage }}</p>
+            <p class="font-bold text-red-900 text-xs uppercase tracking-wider mb-0.5">Acceso Denegado</p>
+            <p class="text-red-700 font-medium">{{ errorMessage }}</p>
           </div>
         </div>
 
         <div class="animate-enter delay-200 space-y-2">
-          <label class="block text-sm font-semibold text-gray-700 ml-1">Correo Electrónico</label>
+          <label class="block text-[10px] uppercase tracking-widest text-gray-500 font-black ml-1">Correo Electrónico</label>
           <div class="relative group">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
+            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400 group-focus-within:text-bakery-gold transition-colors">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path></svg>
             </div>
-            <input formControlName="email" type="email" placeholder="admin@altisimo.com"
-                   class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-500 focus:bg-white outline-none transition-all duration-200 shadow-inner">
+            <input formControlName="email" type="email" placeholder="usuario@altisimo.com"
+                   class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 text-gray-900 font-medium rounded-xl text-sm focus:ring-2 focus:ring-bakery-gold/30 focus:border-bakery-gold focus:bg-white outline-none transition-all duration-300 shadow-inner">
           </div>
         </div>
 
         <div class="animate-enter delay-300 space-y-2">
-          <label class="block text-sm font-semibold text-gray-700 ml-1">Contraseña</label>
+          <label class="block text-[10px] uppercase tracking-widest text-gray-500 font-black ml-1">Contraseña</label>
           <div class="relative group">
-            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400 group-focus-within:text-bakery-gold transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
             </div>
             <input formControlName="password" type="password" placeholder="••••••••"
-                   class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 text-gray-900 rounded-xl text-sm focus:ring-2 focus:ring-blue-200 focus:border-blue-500 focus:bg-white outline-none transition-all duration-200 shadow-inner">
+                   class="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 text-gray-900 font-medium rounded-xl text-sm focus:ring-2 focus:ring-bakery-gold/30 focus:border-bakery-gold focus:bg-white outline-none transition-all duration-300 shadow-inner">
           </div>
         </div>
 
-        <div class="animate-enter delay-500 pt-3">
+        <div class="animate-enter delay-500 pt-4">
           <button type="submit" [disabled]="loginForm.invalid || isLoading" 
-                  class="w-full flex justify-center items-center gap-3 py-4 px-6 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 transition-all duration-200 transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-md hover:shadow-lg">
+                  class="group w-full flex justify-center items-center gap-3 py-4 px-6 bg-bakery-brown text-white font-bold rounded-xl hover:bg-bakery-gold hover:text-bakery-brown focus:ring-4 focus:ring-bakery-gold/20 transition-all duration-300 transform active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-bakery-brown/20 border border-transparent">
             
-            <svg *ngIf="isLoading" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            <svg *ngIf="isLoading" class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
             
-            <svg *ngIf="!isLoading" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            <svg *ngIf="!isLoading" class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             
-            {{ isLoading ? 'Autenticando...' : 'Ingresar al Sistema' }}
+            <span class="tracking-wide uppercase text-sm font-black">{{ isLoading ? 'Verificando...' : 'Iniciar Sesión' }}</span>
           </button>
         </div>
 
       </form>
     </div>
 
-    <div class="p-5 bg-gray-50 border-t border-gray-100 text-center animate-enter delay-500">
-        <p class="text-xs text-gray-400 font-medium">Panadería Altísimo © 2026 - Todos los derechos reservados</p>
+    <div class="p-6 bg-gray-50/80 border-t border-gray-100 text-center animate-enter delay-500 flex flex-col items-center justify-center">
+        <svg class="w-6 h-6 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Área Segura · Altísimo © 2026</p>
     </div>
   </div>
 </div>

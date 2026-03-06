@@ -6,8 +6,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Un color crema base por defecto (puedes ajustarlo si en tu otro proyecto tiene un hex diferente)
         'bakery-cream': '#FDFBF7', 
+        'bakery-brown': '#4A3728', // El marrón oscuro del texto y fondos premium
+        'bakery-gold': '#C5A059',  // El dorado para detalles y botones
       },
       fontFamily: {
         sans: ['Montserrat', 'sans-serif'],

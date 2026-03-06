@@ -4,10 +4,12 @@ import "gorm.io/gorm"
 
 type Product struct {
 	gorm.Model
-	Name       string   `json:"name"`
-	Price      float64  `json:"price"`  // ¡Imprescindible para el carrito!
-	Unidad     string   `json:"unidad"` // Kilo, Docena, etc.
-	Desc       string   `json:"desc"`
-	Image      string   `json:"img"`                               // Lo llamamos Image en Go, pero viaja como "img" a Angular
-	Variedades []string `json:"variedades" gorm:"serializer:json"` // Permite guardar arreglos en PostgreSQL/MySQL sin complicarnos
+	Name   string  `json:"name"`
+	Price  float64 `json:"price"`
+	Unidad string  `json:"unidad"`
+	Desc   string  `json:"desc"`
+	// AÑADIMOS gorm:"type:text" para que soporte imágenes en Base64
+	Image      string   `json:"img" gorm:"type:text"`
+	Variedades []string `json:"variedades" gorm:"serializer:json"`
+	IsActive   bool     `json:"is_active" gorm:"default:true"`
 }

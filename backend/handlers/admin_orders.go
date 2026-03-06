@@ -5,6 +5,7 @@ import (
 
 	"github.com/axelprz/altisimo-panaderia-final/database"
 	"github.com/axelprz/altisimo-panaderia-final/models"
+	"github.com/axelprz/altisimo-panaderia-final/services"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,8 +26,13 @@ func GetPendingOrders(c *gin.Context) {
 }
 
 func UpdateOrderStatus(c *gin.Context) {
-	orderID := c.Param("id")
-	var input UpdateOrderStatusInput
+	id := c.Param("id")
+
+	var input struct {
+		Status       string `json:"status"`
+		Reason       string `json:"reason"`
+		DeliveryDate string `json:"delivery_date"`
+	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Datos inválidos"})
@@ -34,21 +40,44 @@ func UpdateOrderStatus(c *gin.Context) {
 	}
 
 	var order models.Order
-	if err := database.DB.First(&order, orderID).Error; err != nil {
+	// IMPORTANTE: Hacemos Preload("User") para poder acceder al email del cliente
+	if err := database.DB.Preload("User").First(&order, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Pedido no encontrado"})
 		return
 	}
 
-	// Actualizamos estado y motivo
+	// Guardamos el estado actual para saber si realmente cambió
+	oldStatus := order.Status
+
 	order.Status = input.Status
-	switch input.Status {
-	case "rejected":
-		order.RejectionReason = input.RejectionReason
-	case "accepted":
-		order.DeliveryDate = input.DeliveryDate // <--- GUARDAMOS LA FECHA
+
+	if input.Reason != "" {
+		order.RejectionReason = input.Reason
 	}
 
-	database.DB.Save(&order)
+	if input.DeliveryDate != "" {
+		order.DeliveryDate = input.DeliveryDate
+	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Estado del pedido actualizado exitosamente"})
+	if err := database.DB.Save(&order).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al guardar el estado"})
+		return
+	}
+
+	// ========================================================
+	// LÓGICA DE ENVÍO DE CORREOS
+	// ========================================================
+	// Solo enviamos correo si el estado es nuevo (evita spam si se hace doble clic)
+	if oldStatus != input.Status && order.User.Email != "" {
+		switch input.Status {
+		case "accepted":
+			services.SendOrderAcceptedEmail(order.User.Email, order.ID, input.DeliveryDate)
+		case "rejected":
+			services.SendOrderRejectedEmail(order.User.Email, order.ID, input.Reason, false)
+		case "cancelled":
+			services.SendOrderRejectedEmail(order.User.Email, order.ID, input.Reason, true)
+		}
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Estado actualizado correctamente"})
 }

@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms'; // <-- IMPORTANTE: Necesario para el ngModel del selector
 import { CartService, CartItem } from '../../services/cart.service';
+import { AddressService, Address } from '../../services/address.service'; // <-- Importamos el servicio de direcciones
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  // Agregamos FormsModule a los imports
+  imports: [CommonModule, RouterModule, FormsModule], 
   templateUrl: './cart.component.html'
 })
 export class CartComponent implements OnInit {
@@ -16,17 +19,41 @@ export class CartComponent implements OnInit {
   isCheckingOut = false;
   orderSuccess = false;
 
-  constructor(private cartService: CartService) {}
+  // --- NUEVAS VARIABLES PARA ENVÍO ---
+  addresses: Address[] = [];
+  selectedAddressId: number | null = null;
+
+  constructor(
+    private cartService: CartService,
+    private addressService: AddressService // <-- Inyectamos el servicio
+  ) {}
 
   ngOnInit(): void {
     this.loadCart();
+    this.loadAddresses(); // Cargamos las direcciones apenas entra al carrito
   }
 
+  // --- CARGAR DIRECCIONES ---
+  loadAddresses() {
+    this.addressService.getAddresses().subscribe({
+      next: (data) => {
+        this.addresses = data || [];
+        // Si el usuario tiene direcciones, autoseleccionamos la principal (o la primera)
+        if (this.addresses.length > 0) {
+          const defaultAddr = this.addresses.find(a => a.is_default);
+          this.selectedAddressId = defaultAddr ? defaultAddr.ID! : this.addresses[0].ID!;
+        }
+      },
+      error: (err) => console.error('Error cargando direcciones', err)
+    });
+  }
+
+  // --- LÓGICA DEL CARRITO ---
   loadCart() {
     this.isLoading = true;
     this.cartService.getCart().subscribe({
       next: (items) => {
-        this.cartItems = items;
+        this.cartItems = items || [];
         this.calculateTotal();
         this.isLoading = false;
       },
@@ -52,7 +79,6 @@ export class CartComponent implements OnInit {
     this.total = this.cartItems.reduce((acc, item) => {
       // Red de seguridad: si el producto no viene (ej: fue borrado de la BD), lo ignoramos
       if (!item.product) return acc;
-      
       return acc + (item.product.price * item.quantity);
     }, 0);
   }
@@ -79,9 +105,18 @@ export class CartComponent implements OnInit {
     });
   }
 
+  // --- PROCESO DE PAGO (NUEVO FLUJO) ---
   procederAlPago() {
+    // 1. Validación de seguridad: no dejar avanzar sin dirección
+    if (!this.selectedAddressId) {
+      alert("Por favor, selecciona una dirección de entrega antes de continuar.");
+      return;
+    }
+
     this.isCheckingOut = true;
-    this.cartService.checkout().subscribe({
+    
+    // 2. Enviamos el ID de la dirección al servicio
+    this.cartService.checkout(this.selectedAddressId).subscribe({
       next: (response) => {
         this.isCheckingOut = false;
         this.orderSuccess = true; // Mostramos pantalla de éxito
@@ -91,7 +126,8 @@ export class CartComponent implements OnInit {
       error: (err) => {
         console.error('Error al enviar pedido:', err);
         this.isCheckingOut = false;
-        alert('Hubo un error al procesar tu pedido. Inténtalo de nuevo.');
+        // Mostramos el mensaje de error del backend si existe
+        alert(err.error?.error || 'Hubo un error al procesar tu pedido. Inténtalo de nuevo.');
       }
     });
   }

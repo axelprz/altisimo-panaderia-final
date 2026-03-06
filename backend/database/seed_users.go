@@ -16,8 +16,8 @@ func SeedUsers() {
 		Password string
 		Role     string
 	}{
-		{"admin@altisimo.com", "123456", "admin"}, // El dueño de la panadería
-		{"cliente@test.com", "123456", "client"},  // Un cliente para probar el carrito
+		{"admin@altisimo.com", "123456", "admin"},         // El dueño de la panadería
+		{"axelperez164623@gmail.com", "123456", "client"}, // Un cliente para probar el carrito
 	}
 
 	for _, u := range users {

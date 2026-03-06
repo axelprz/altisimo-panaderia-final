@@ -1,94 +1,225 @@
-<div class="space-y-6 animate-enter">
-  <div class="mb-8">
-    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight font-serif">Pedidos Pendientes</h2>
-    <p class="text-sm text-gray-500 mt-1">Revisa y gestiona los pedidos entrantes de tus clientes.</p>
-  </div>
-
-  <div *ngIf="isLoading" class="flex justify-center py-20">
-    <svg class="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-  </div>
-
-  <div *ngIf="!isLoading && (!orders || orders.length === 0)" class="bg-white p-12 rounded-2xl shadow-sm border border-gray-100 text-center animate-enter">
-    <div class="w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-    </div>
-    <h3 class="text-xl font-bold text-gray-800">¡Todo al día!</h3>
-    <p class="text-gray-500 mt-2">No tienes pedidos pendientes en este momento.</p>
-  </div>
-
-  <div *ngIf="!isLoading && orders && orders.length > 0" class="grid gap-6">
-    <div *ngFor="let order of orders" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden animate-enter">
+<div class="space-y-8 max-w-7xl mx-auto pb-12 font-sans animate-enter">
+  
+  <div class="mb-10 space-y-6">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <h2 class="text-3xl sm:text-4xl font-serif font-bold text-bakery-brown tracking-tight">Gestión de Pedidos</h2>
+        <div class="h-1.5 w-16 bg-bakery-gold mt-3 rounded-full"></div>
+      </div>
       
-      <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+      <div *ngIf="currentTab === 'pending' && orders.length > 0" class="inline-flex items-center gap-3 px-5 py-2.5 bg-yellow-50 rounded-full border border-yellow-200 text-sm font-bold text-yellow-700 shrink-0 shadow-sm animate-enter">
+        <span class="flex h-3 w-3 relative">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
+        </span>
+        {{ orders.length }} {{ orders.length === 1 ? 'nuevo ingreso' : 'nuevos ingresos' }}
+      </div>
+    </div>
+
+    <div class="flex p-1.5 bg-gray-100 rounded-2xl w-full sm:w-max shadow-inner">
+      <button (click)="switchTab('pending')" 
+              class="flex-1 sm:flex-none px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300"
+              [ngClass]="currentTab === 'pending' ? 'bg-white text-bakery-brown shadow-sm' : 'text-gray-500 hover:text-gray-700'">
+        Nuevos Ingresos
+      </button>
+      <button (click)="switchTab('accepted')" 
+              class="flex-1 sm:flex-none px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300"
+              [ngClass]="currentTab === 'accepted' ? 'bg-bakery-brown text-white shadow-md' : 'text-gray-500 hover:text-gray-700'">
+        Logística & Entregas
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-32 animate-enter">
+    <svg class="animate-spin h-12 w-12 text-bakery-gold mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+    <p class="font-bold text-lg text-bakery-brown">Actualizando lista...</p>
+  </div>
+
+  <div *ngIf="!isLoading && (!orders || orders.length === 0)" class="flex flex-col items-center justify-center py-20 bg-gray-50/50 rounded-[3rem] border-2 border-dashed border-gray-200 animate-enter">
+    <div class="w-24 h-24 bg-white shadow-sm border border-gray-100 rounded-full flex items-center justify-center mb-6"
+         [ngClass]="currentTab === 'pending' ? 'text-green-500' : 'text-bakery-gold'">
+      <svg *ngIf="currentTab === 'pending'" class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+      <svg *ngIf="currentTab === 'accepted'" class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+    </div>
+    <h3 class="text-2xl font-serif font-bold text-gray-900 mb-2">
+      {{ currentTab === 'pending' ? '¡La bandeja está limpia!' : 'No hay entregas pendientes' }}
+    </h3>
+    <p class="text-gray-500 font-medium text-center max-w-sm">
+      {{ currentTab === 'pending' ? 'No tienes pedidos pendientes de revisión.' : 'Todos los pedidos aceptados ya fueron entregados.' }}
+    </p>
+  </div>
+
+  <div *ngIf="!isLoading && orders && orders.length > 0" class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+    <div *ngFor="let order of orders" class="bg-white rounded-[2rem] shadow-md border border-gray-200 overflow-hidden animate-enter hover:shadow-lg transition-shadow duration-300 flex flex-col">
+      
+      <div class="px-8 py-6 border-b border-gray-200 flex justify-between items-center"
+           [ngClass]="currentTab === 'accepted' ? 'bg-bakery-brown text-white' : 'bg-gray-50 text-gray-900'">
         <div>
-          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Orden #{{ order.ID }}</span>
-          <p class="text-gray-900 font-medium mt-1">Cliente: {{ order.user?.email || 'Desconocido' }}</p>
+          <span class="inline-block px-3 py-1 text-[10px] font-black uppercase tracking-widest rounded-full mb-2"
+                [ngClass]="currentTab === 'accepted' ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-700'">
+            Orden #{{ order.ID }}
+          </span>
+          <p class="font-bold flex items-center gap-2">
+            <svg class="w-4 h-4" [ngClass]="currentTab === 'accepted' ? 'text-bakery-gold' : 'text-gray-400'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            {{ order.user?.email || 'Cliente Desconocido' }}
+          </p>
         </div>
         <div class="text-right">
-          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Total</span>
-          <p class="text-xl font-bold text-green-600">${{ order.total }}</p>
+          <span class="text-[10px] font-black uppercase tracking-widest block mb-1"
+                [ngClass]="currentTab === 'accepted' ? 'text-bakery-gold' : 'text-gray-400'">Total a Cobrar</span>
+          <p class="text-3xl font-serif font-black"
+             [ngClass]="currentTab === 'accepted' ? 'text-white' : 'text-bakery-brown'">${{ order.total }}</p>
         </div>
       </div>
 
-      <div class="p-6">
+      <div *ngIf="order.delivery_address" class="px-8 py-4 bg-gray-50 border-b border-gray-200 flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
+        <div class="flex items-start gap-3">
+          <div class="p-2 bg-white rounded-xl shadow-sm text-bakery-brown shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.242-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          </div>
+          <div>
+            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Enviar a</p>
+            <p class="text-sm font-bold text-gray-900">{{ order.delivery_address }}</p>
+          </div>
+        </div>
+        <div *ngIf="order.delivery_phone" class="flex items-center gap-2 pl-11 sm:pl-0">
+          <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+          <a [href]="'tel:' + order.delivery_phone" class="text-sm font-bold text-bakery-brown hover:text-bakery-gold transition-colors">{{ order.delivery_phone }}</a>
+        </div>
+      </div>
+
+      <div *ngIf="currentTab === 'accepted'" class="bg-yellow-50 border-b border-yellow-100 px-8 py-4 flex items-center gap-4">
+        <div class="p-3 bg-white rounded-xl shadow-sm text-yellow-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <div>
+          <p class="text-[10px] font-black text-yellow-600 uppercase tracking-widest">Programado para entrega</p>
+          <p class="text-lg font-bold text-gray-900">
+            {{ order.delivery_date ? (order.delivery_date | date:'dd/MM/yyyy - HH:mm') + ' hs' : 'Sin fecha asignada' }}
+          </p>
+        </div>
+      </div>
+
+      <div class="p-8 flex-1">
         <ul class="divide-y divide-gray-100">
-          <li *ngFor="let item of (order.items || [])" class="py-3 flex justify-between items-center">
+          <li *ngFor="let item of (order.items || [])" class="py-4 flex justify-between items-center group">
             <div class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
+              <div class="w-14 h-14 rounded-xl overflow-hidden bg-gray-50 border border-gray-100 shadow-sm shrink-0">
                 <img *ngIf="item.product" [src]="formatImageUrl(item.product.img)" [alt]="item.product.name" class="w-full h-full object-cover">
               </div>
               <div>
-                <p class="font-medium text-gray-800">{{ item.product?.name || 'Producto eliminado' }}</p>
-                <p *ngIf="item.variedad" class="text-xs text-yellow-600 font-medium uppercase">{{ item.variedad }}</p>
+                <p class="font-bold text-gray-800">{{ item.product?.name || 'Producto eliminado' }}</p>
+                <p *ngIf="item.variedad" class="text-[10px] font-black text-bakery-gold uppercase tracking-wider mt-0.5">{{ item.variedad }}</p>
               </div>
             </div>
-            <span class="text-gray-600 font-medium">{{ item.quantity }} x ${{ item.price }}</span>
+            <div class="text-right shrink-0">
+              <span class="block text-gray-900 font-bold">{{ item.quantity }}x</span>
+            </div>
           </li>
         </ul>
 
-        <div *ngIf="rejectingOrderId !== order.ID && acceptingOrderId !== order.ID" class="mt-6 flex gap-3 justify-end border-t border-gray-100 pt-6">
-          <button (click)="startRejection(order.ID)" class="px-5 py-2.5 rounded-xl font-medium text-red-600 hover:bg-red-50 transition-colors">
-            Rechazar
-          </button>
-          <button (click)="startAcceptance(order.ID)" class="px-5 py-2.5 rounded-xl font-medium text-white bg-green-500 hover:bg-green-600 shadow-md shadow-green-500/20 transition-all transform active:scale-95">
-            Aceptar Pedido
-          </button>
-        </div>
+        <ng-container *ngIf="currentTab === 'pending'">
+          <div *ngIf="acceptingOrderId !== order.ID" class="mt-8 flex gap-4 justify-end border-t border-dashed border-gray-200 pt-8">
+            <button (click)="openCancelModal(order.ID, 'pending')" class="px-6 py-3 rounded-full font-bold text-red-600 bg-white border-2 border-red-100 hover:bg-red-50 hover:border-red-200 transition-all flex items-center gap-2">
+              Rechazar
+            </button>
+            <button (click)="startAcceptance(order.ID)" class="px-8 py-3 rounded-full font-bold text-white bg-green-600 hover:bg-green-700 shadow-lg shadow-green-600/20 transition-all transform active:scale-95 flex items-center gap-2">
+              Aceptar Pedido
+            </button>
+          </div>
 
-        <div *ngIf="acceptingOrderId === order.ID" class="mt-6 border-t border-gray-100 pt-6 animate-enter">
-          <div class="bg-green-50 p-4 rounded-2xl border border-green-100">
-            <label class="block text-sm font-bold text-green-800 mb-2">Programar Entrega:</label>
-            <p class="text-xs text-green-700 mb-4 italic">Indica cuándo estará listo el pedido para el cliente.</p>
-            
-            <input type="datetime-local" [(ngModel)]="deliveryDate" 
-                   class="w-full sm:w-auto rounded-xl border-green-200 shadow-sm focus:border-green-500 focus:ring-green-500 p-3 bg-white outline-none text-gray-700">
-            
-            <div class="mt-4 flex gap-3 justify-end border-t border-green-100 pt-4">
-              <button (click)="cancelAcceptance()" class="px-4 py-2 rounded-xl text-gray-500 hover:bg-green-100 font-medium transition-colors text-sm">
-                Cancelar
-              </button>
-              <button (click)="confirmAcceptance(order.ID)" class="px-6 py-2 rounded-xl text-white bg-green-600 hover:bg-green-700 font-bold shadow-md transition-all text-sm uppercase tracking-wide">
-                Confirmar y Avisar al Cliente
-              </button>
+          <div *ngIf="acceptingOrderId === order.ID" class="mt-8 border-t border-dashed border-gray-200 pt-8 animate-enter">
+            <div class="bg-green-50/50 p-6 rounded-[1.5rem] border border-green-100 shadow-inner">
+              <label class="block text-sm font-bold text-green-900 mb-2">Programar Entrega</label>
+              <input type="datetime-local" [(ngModel)]="deliveryDate" 
+                     class="w-full rounded-xl border-green-200 shadow-sm focus:border-green-500 p-3.5 bg-white outline-none text-gray-900 font-medium mb-4">
+              <div class="flex justify-end gap-3">
+                <button (click)="cancelAcceptance()" class="px-6 py-3 rounded-full text-gray-500 bg-white border border-gray-200 hover:bg-gray-50 font-bold transition-colors text-sm">Cancelar</button>
+                <button (click)="confirmAcceptance(order.ID)" class="px-8 py-3 rounded-full text-white bg-green-600 hover:bg-green-700 font-black shadow-lg shadow-green-600/20 transition-all text-sm uppercase tracking-wide">Avisar al Cliente</button>
+              </div>
             </div>
           </div>
-        </div>
+        </ng-container>
 
-        <div *ngIf="rejectingOrderId === order.ID" class="mt-6 border-t border-gray-100 pt-6 animate-enter">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Motivo del rechazo (obligatorio):</label>
-          <textarea [(ngModel)]="rejectionReason" rows="2" class="w-full rounded-xl border-gray-200 shadow-sm focus:border-red-500 focus:ring-red-500 p-3 bg-gray-50 outline-none" placeholder="Ej: No hay stock suficiente..."></textarea>
-          
-          <div class="mt-4 flex gap-3 justify-end">
-            <button (click)="cancelRejection()" class="px-4 py-2 rounded-xl text-gray-500 hover:bg-gray-100 font-medium transition-colors">
-              Cancelar
+        <ng-container *ngIf="currentTab === 'accepted'">
+          <div class="mt-8 flex gap-4 justify-end border-t border-dashed border-gray-200 pt-8">
+            <button (click)="openCancelModal(order.ID, 'accepted')" class="px-6 py-3 rounded-full font-bold text-red-400 bg-white border-2 border-transparent hover:text-red-600 hover:bg-red-50 transition-all flex items-center gap-2">
+              Cancelar Envío
             </button>
-            <button (click)="confirmRejection(order.ID)" class="px-4 py-2 rounded-xl text-white bg-red-500 hover:bg-red-600 font-medium shadow-md shadow-red-500/20 transition-all">
-              Confirmar Rechazo
+            <button (click)="openDeliverModal(order.ID)" class="px-8 py-3 rounded-full font-black uppercase tracking-wide text-bakery-brown bg-bakery-gold hover:bg-yellow-500 shadow-lg shadow-bakery-gold/30 transition-all transform active:scale-95 flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+              Marcar Entregado
             </button>
           </div>
-        </div>
+        </ng-container>
 
       </div>
     </div>
+  </div>
+</div>
+
+<div *ngIf="showCancelModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" (click)="closeCancelModal()"></div>
+  
+  <div class="relative bg-white p-8 rounded-[2.5rem] shadow-2xl w-full max-w-md transform transition-all animate-enter border border-gray-100">
+    <div class="flex items-center gap-4 mb-6">
+      <div class="w-12 h-12 rounded-full bg-red-100 text-red-500 flex items-center justify-center shrink-0">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+      </div>
+      <div>
+        <h3 class="text-2xl font-serif font-bold text-gray-900">
+          {{ orderToCancelStatus === 'pending' ? 'Rechazar Pedido' : 'Cancelar Envío' }}
+        </h3>
+      </div>
+    </div>
+
+    <div class="space-y-4">
+      <p class="text-sm text-gray-600 font-medium">Por favor, indica el motivo de la cancelación. Este mensaje le llegará directamente al cliente para que sepa qué sucedió.</p>
+      
+      <div>
+        <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-black mb-2 ml-1">Motivo (Obligatorio)</label>
+        <textarea [(ngModel)]="rejectionReason" rows="3" 
+                  class="w-full px-5 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-red-500/20 focus:border-red-500 focus:bg-white outline-none transition-all resize-none"
+                  placeholder="Ej: Nos quedamos sin stock de medialunas..."></textarea>
+      </div>
+    </div>
+
+    <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-end">
+      <button (click)="closeCancelModal()" class="w-full sm:w-auto px-6 py-3 rounded-full text-gray-600 font-bold bg-white border-2 border-gray-200 hover:bg-gray-50 transition-all">
+        Volver
+      </button>
+      <button (click)="confirmCancellation()" [disabled]="!rejectionReason.trim()" 
+              class="w-full sm:w-auto px-8 py-3 rounded-full text-white font-black bg-red-500 hover:bg-red-600 transition-all shadow-lg shadow-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed">
+        Confirmar Cancelación
+      </button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showDeliverModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" (click)="closeDeliverModal()"></div>
+  <div class="relative bg-white p-8 rounded-[2.5rem] shadow-2xl w-full max-w-sm transform transition-all animate-enter text-center border border-gray-100">
+    <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    </div>
+    <h3 class="text-xl font-serif font-bold text-gray-900 mb-2">¿Confirmar Entrega?</h3>
+    <p class="text-sm text-gray-500 font-medium mb-8">Confirma que el pedido ha sido entregado al cliente y el pago ingresado en caja.</p>
+    <div class="flex flex-col sm:flex-row gap-3">
+      <button (click)="closeDeliverModal()" class="flex-1 py-3.5 rounded-full font-bold text-gray-600 bg-gray-50 hover:bg-gray-100 transition-colors">Volver</button>
+      <button (click)="confirmDelivery()" class="flex-1 py-3.5 rounded-full font-bold text-white bg-bakery-gold hover:bg-yellow-500 shadow-lg shadow-bakery-gold/20 transition-all active:scale-95">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="fixed bottom-8 right-8 left-8 sm:left-auto z-50 transition-all duration-500 ease-out transform pointer-events-none"
+     [ngClass]="showToast ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-10 opacity-0 scale-95'">
+  <div class="flex items-center w-full sm:w-max max-w-sm p-5 bg-gray-900 rounded-[1.5rem] shadow-2xl mx-auto" role="alert">
+    <div *ngIf="toastType === 'success'" class="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-green-400 bg-green-400/10 rounded-xl">
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+    </div>
+    <div *ngIf="toastType === 'error'" class="inline-flex items-center justify-center flex-shrink-0 w-10 h-10 text-red-400 bg-red-400/10 rounded-xl">
+      <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+    </div>
+    <div class="ml-4 text-sm font-medium text-white tracking-wide">{{ toastMessage }}</div>
   </div>
 </div>

@@ -41,5 +41,5 @@ func Connect() {
 
 	// Migración automática de tablas
 	// Asegúrate de que Order y OrderItem estén aquí
-	DB.AutoMigrate(&models.User{}, &models.Product{}, &models.CartItem{}, &models.Order{}, &models.OrderItem{}, &models.Employee{})
+	DB.AutoMigrate(&models.User{}, &models.Product{}, &models.CartItem{}, &models.Order{}, &models.OrderItem{}, &models.Employee{}, &models.Address{})
 }

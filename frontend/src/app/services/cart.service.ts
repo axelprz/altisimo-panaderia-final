@@ -30,7 +30,7 @@ export class CartService {
     this.loadInitialCart();
   }
 
-  // ¡CORREGIDO! Ahora usa siempre 'token'
+  // ¡CORREGIDO! Ahora usa siempre 'token' o 'auth_token' según lo guardes
   private getHeaders() {
     const token = localStorage.getItem('auth_token'); 
     return token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
@@ -46,7 +46,7 @@ export class CartService {
   }
 
   loadInitialCart() {
-    const token = localStorage.getItem('auth_token'); // <- CORREGIDO AQUÍ TAMBIÉN
+    const token = localStorage.getItem('auth_token');
     if (token) {
       this.http.get<CartItem[]>(this.apiUrl, { headers: this.getHeaders() }).subscribe({
         next: (items) => this.updateCartCount(items),
@@ -84,9 +84,12 @@ export class CartService {
     );
   }
 
-  // NUEVA FUNCIÓN DE CHECKOUT
-  checkout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/checkout`, {}, { headers: this.getHeaders() }).pipe(
+  // --- FUNCIÓN DE CHECKOUT ACTUALIZADA ---
+  // Ahora recibe el ID de la dirección y lo envía como JSON al backend en Go
+  checkout(addressId: number): Observable<any> {
+    const body = { address_id: addressId };
+    
+    return this.http.post(`${this.apiUrl}/checkout`, body, { headers: this.getHeaders() }).pipe(
       tap(() => this.loadInitialCart()) // Reinicia el contador a 0 automáticamente
     );
   }

@@ -10,7 +10,6 @@ import { CartService } from '../../services/cart.service';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './product-detail.component.html'
-  // Eliminamos styleUrls porque todo es Tailwind ahora
 })
 export class ProductDetailComponent implements OnInit {
   productId: number | null = null;
@@ -26,11 +25,10 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,
-    private cartService: CartService // Inyectamos el carrito real
+    private cartService: CartService 
   ) { }
 
   ngOnInit(): void {
-    // Obtenemos el ID de la URL
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       this.productId = Number(idParam);
@@ -40,12 +38,10 @@ export class ProductDetailComponent implements OnInit {
 
   loadProduct() {
     this.isLoading = true;
-    // Buscamos todos los productos y filtramos el que necesitamos
     this.productService.getProducts().subscribe({
       next: (products) => {
         this.product = products.find(p => p.ID === this.productId);
         
-        // Si tiene variedades, seleccionamos la primera por defecto
         if (this.product && this.product.variedades && this.product.variedades.length > 0) {
           this.variedadSeleccionada = this.product.variedades[0];
         }
@@ -58,10 +54,25 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
-  // Prevenimos que las imágenes se rompan
-  formatImageUrl(imgPath: string): string {
-    if (!imgPath) return '/assets/images/placeholder.jpg';
-    return imgPath.startsWith('/') ? imgPath : '/' + imgPath;
+  // --- FORMATEADOR DE IMÁGENES PÚBLICO ---
+  formatImageUrl(imgPath: string | undefined): string {
+    if (!imgPath) {
+      return '/assets/images/placeholder.jpg'; 
+    }
+
+    if (imgPath.startsWith('data:image')) {
+      return imgPath; 
+    }
+
+    if (imgPath.startsWith('http')) {
+      return imgPath;
+    }
+
+    if (imgPath.startsWith('/assets/') || imgPath.startsWith('assets/')) {
+      return imgPath.startsWith('/') ? imgPath : '/' + imgPath;
+    }
+
+    return '/' + imgPath;
   }
 
   agregarAlCarrito() {
@@ -69,19 +80,16 @@ export class ProductDetailComponent implements OnInit {
 
     this.isAdding = true;
 
-    // Preparamos el paquete para el backend
     const cartItem = {
       product_id: this.product.ID,
       quantity: this.cantidad,
       variedad: this.variedadSeleccionada || ''
     };
 
-    // ¡Lo enviamos al carrito real!
     this.cartService.addToCart(cartItem).subscribe({
       next: () => {
         this.isAdding = false;
         
-        // Mostramos el Toast de éxito
         this.mostrarNotificacion = true;
         setTimeout(() => {
           this.mostrarNotificacion = false;

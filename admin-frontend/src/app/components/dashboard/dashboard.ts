@@ -1,8 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseChartDirective } from 'ng2-charts';
-import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { ChartConfiguration, ChartOptions, ChartType } from 'chart.js';
 import { DashboardService, DashboardStats } from '../../services/dashboard';
+
+// IMPORTANTE PARA QUE FUNCIONE CHART.JS EN ANGULAR STANDALONE
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
@@ -14,25 +18,66 @@ export class DashboardComponent implements OnInit {
   stats: DashboardStats | null = null;
   isLoading = true;
 
-  // Configuración del gráfico de Dona (Pedidos)
-  public pieChartOptions: ChartOptions<'doughnut'> = { 
+  // =========================================
+  // GRÁFICO 1: ESTADO DE PEDIDOS (BARRAS)
+  // =========================================
+  public barChartOptions: ChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { position: 'bottom' }
+      legend: { display: false },
+      tooltip: { backgroundColor: '#4A3728', padding: 12, cornerRadius: 8 }
     },
-    cutout: '70%', // Hace que el anillo sea más delgado y elegante
+    scales: {
+      y: { beginAtZero: true, ticks: { precision: 0 } } // Sin decimales en pedidos
+    }
   };
-  
-  public pieChartData: ChartConfiguration<'doughnut'>['data'] = {
-    labels: ['Aceptados', 'Pendientes'],
-    datasets: [ { 
-      data: [0, 0], 
-      backgroundColor: ['#10B981', '#F59E0B'], // Verde y Naranja Tailwind
-      hoverBackgroundColor: ['#059669', '#D97706'],
-      borderWidth: 0,
-      hoverOffset: 4
-    } ]
+  public barChartType: ChartType = 'bar';
+  public barChartData: ChartConfiguration<'bar'>['data'] = {
+    labels: ['Pendientes', 'Aceptados', 'Entregados'],
+    datasets: [{ 
+      data: [0, 0, 0], 
+      backgroundColor: ['#F59E0B', '#10B981', '#4A3728'], // Amarillo, Verde, Marrón
+      borderRadius: 8
+    }]
+  };
+
+  // =========================================
+  // GRÁFICO 2: INGRESOS ÚLTIMOS 7 DÍAS (LÍNEAS)
+  // =========================================
+  public lineChartOptions: ChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { 
+        backgroundColor: '#4A3728', 
+        callbacks: {
+          label: (context) => ` $${context.parsed.y}`
+        }
+      }
+    },
+    scales: {
+      y: { beginAtZero: true }
+    },
+    elements: {
+      line: { tension: 0.4 } // Hace la línea curva
+    }
+  };
+  public lineChartType: ChartType = 'line';
+  public lineChartData: ChartConfiguration<'line'>['data'] = {
+    labels: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'], // Se sobrescribe al cargar
+    datasets: [{ 
+      data: [0, 0, 0, 0, 0, 0, 0],
+      borderColor: '#C5A059', // Dorado
+      backgroundColor: 'rgba(197, 160, 89, 0.2)', // Dorado transparente debajo de la línea
+      fill: true,
+      pointBackgroundColor: '#4A3728',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: '#C5A059',
+      borderWidth: 3
+    }]
   };
 
   constructor(
@@ -50,18 +95,31 @@ export class DashboardComponent implements OnInit {
       next: (data) => {
         this.stats = data;
         
-        // Actualizamos el gráfico con los datos reales
-        this.pieChartData.datasets[0].data = [data.accepted_orders, data.pending_orders];
-        // Forzamos la actualización de la referencia para que Chart.js re-renderice
-        this.pieChartData = {...this.pieChartData}; 
+        // 1. Actualizamos el gráfico de Barras
+        this.barChartData.datasets[0].data = [
+          data.pending_orders, 
+          data.accepted_orders, 
+          data.delivered_orders
+        ];
+        this.barChartData = {...this.barChartData}; // Forzar actualización visual
+        
+        // 2. Actualizamos el gráfico de Líneas (Si hay historial)
+        if (data.daily_sales && data.daily_sales.length > 0) {
+          // Extraemos las fechas para las etiquetas X
+          this.lineChartData.labels = data.daily_sales.map(sale => {
+            const date = new Date(sale.date);
+            return `${date.getDate()}/${date.getMonth()+1}`; // Ej: 5/3
+          });
+          // Extraemos los totales para el eje Y
+          this.lineChartData.datasets[0].data = data.daily_sales.map(sale => sale.total);
+          this.lineChartData = {...this.lineChartData};
+        }
         
         this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar estadísticas:', err);
-        // Si hay error o no hay datos, inicializamos en cero
-        this.stats = { total_sales: 0, accepted_orders: 0, pending_orders: 0 };
         this.isLoading = false;
         this.cdr.detectChanges();
       }

@@ -24,6 +24,10 @@ func main() {
 
 	r := gin.Default()
 
+	// NUEVO: Servir carpeta de imágenes públicamente
+	// Cuando Angular pida /api/uploads/foto.jpg, Gin buscará en la carpeta local "./uploads"
+	r.Static("/api/uploads", "./uploads")
+
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:4200", "http://localhost"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -38,8 +42,7 @@ func main() {
 		// Login Público (Clientes)
 		api.POST("/login", middleware.RateLimitMiddleware(), handlers.Login)
 
-		// ---> NUEVO: Login exclusivo para el Admin Panel <---
-		// IMPORTANTE: Va aquí, FUERA de la zona que requiere Auth
+		// Login exclusivo para el Admin Panel
 		api.POST("/admin/login", middleware.RateLimitMiddleware(), handlers.AdminLogin)
 
 		// RUTA PARA PRODUCTOS PÚBLICOS
@@ -62,7 +65,13 @@ func main() {
 
 			// --- RUTAS DE PEDIDOS ---
 			protected.GET("/orders/pending", handlers.GetPendingOrders)
+			protected.GET("/orders/accepted", handlers.GetAcceptedOrders)
 			protected.PUT("/orders/:id/status", handlers.UpdateOrderStatus)
+
+			// ---> NUEVAS: RUTAS DE PRODUCTOS (ADMIN) <---
+			protected.POST("/products", handlers.CreateProduct)
+			protected.PUT("/products/:id", handlers.UpdateProduct)
+			protected.DELETE("/products/:id", handlers.DeleteProduct)
 		}
 
 		// Rutas del Usuario (Requieren Token)
@@ -71,6 +80,9 @@ func main() {
 		{
 			userGroup.PUT("/password", handlers.ChangePassword)
 			userGroup.GET("/orders", handlers.GetUserOrders)
+			userGroup.GET("/addresses", handlers.GetUserAddresses)
+			userGroup.POST("/addresses", handlers.CreateAddress)
+			userGroup.DELETE("/addresses/:id", handlers.DeleteAddress)
 		}
 
 		// RUTAS DEL CARRITO (Requieren Token)

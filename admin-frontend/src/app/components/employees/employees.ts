@@ -1,18 +1,18 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms'; // <-- 1. Importamos FormsModule
-import { EmployeeService } from '../../services/employee';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms'; 
+import { EmployeeService } from '../../services/employee'; // Asegúrate de que la ruta sea correcta
 import { Employee } from '../../models/employee.model';
 
 @Component({
   selector: 'app-employees',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule], // <-- 2. Lo agregamos aquí
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './employees.html'
 })
 export class EmployeesComponent implements OnInit {
   employees: Employee[] = [];
-  filteredEmployees: Employee[] = []; // <-- Arreglo que mostraremos en la tabla
+  filteredEmployees: Employee[] = [];
   isLoading = true; 
   
   // Variables para Búsqueda y Filtros
@@ -20,14 +20,20 @@ export class EmployeesComponent implements OnInit {
   filterRole: string = '';
   filterStatus: string = '';
   
+  // Variables del Modal de Formulario
   showModal = false;      
   animateModal = false;   
   isEditing = false;
-  
   employeeForm: FormGroup;
   currentEmployeeId: number | null = null;
+  
+  // --- NUEVAS VARIABLES PARA TOAST Y MODAL ELIMINAR ---
   toastMessage = '';
   showToast = false;
+  toastType: 'success' | 'error' = 'success';
+
+  showDeleteModal = false;
+  employeeToDelete: number | null = null;
 
   constructor(
     private employeeService: EmployeeService, 
@@ -55,7 +61,7 @@ export class EmployeesComponent implements OnInit {
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
         this.employees = data || [];
-        this.applyFilters(); // <-- Aplicamos filtros al cargar
+        this.applyFilters();
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -64,6 +70,7 @@ export class EmployeesComponent implements OnInit {
         this.employees = [];
         this.filteredEmployees = [];
         this.isLoading = false;
+        this.displayToast('Error al cargar empleados', 'error');
         this.cdr.detectChanges(); 
       }
     });
@@ -72,28 +79,25 @@ export class EmployeesComponent implements OnInit {
   // --- LÓGICA DE FILTROS EN TIEMPO REAL ---
   applyFilters(): void {
     this.filteredEmployees = this.employees.filter(emp => {
-      // 1. Filtro por Búsqueda (Nombre, Apellido o DNI)
       const term = this.searchTerm.toLowerCase();
       const matchesSearch = !term || 
         emp.name.toLowerCase().includes(term) ||
         emp.last_name.toLowerCase().includes(term) ||
         emp.dni.includes(term);
 
-      // 2. Filtro por Rol
       const matchesRole = !this.filterRole || emp.role === this.filterRole;
 
-      // 3. Filtro por Estado (Activo / Inactivo)
       let matchesStatus = true;
       if (this.filterStatus === 'active') matchesStatus = emp.is_active === true;
       if (this.filterStatus === 'inactive') matchesStatus = emp.is_active === false;
 
-      // Un empleado solo se muestra si cumple los 3 filtros
       return matchesSearch && matchesRole && matchesStatus;
     });
     
     this.cdr.detectChanges();
   }
 
+  // --- LÓGICA DEL MODAL DE FORMULARIO ---
   openModal(employee?: Employee): void {
     if (employee) {
       this.isEditing = true;
@@ -131,39 +135,65 @@ export class EmployeesComponent implements OnInit {
     const employeeData: Employee = this.employeeForm.value;
 
     if (this.isEditing && this.currentEmployeeId) {
-      this.employeeService.updateEmployee(this.currentEmployeeId, employeeData).subscribe(() => {
-        this.loadEmployees();
-        this.closeModal();
-        this.displayToast('Empleado actualizado exitosamente');
+      this.employeeService.updateEmployee(this.currentEmployeeId, employeeData).subscribe({
+        next: () => {
+          this.loadEmployees();
+          this.closeModal();
+          this.displayToast('Empleado actualizado exitosamente', 'success');
+        },
+        error: () => this.displayToast('Error al actualizar empleado', 'error')
       });
     } else {
-      this.employeeService.createEmployee(employeeData).subscribe(() => {
-        this.loadEmployees();
-        this.closeModal();
-        this.displayToast('Empleado creado exitosamente');
+      this.employeeService.createEmployee(employeeData).subscribe({
+        next: () => {
+          this.loadEmployees();
+          this.closeModal();
+          this.displayToast('Empleado registrado exitosamente', 'success');
+        },
+        error: () => this.displayToast('Error al registrar empleado', 'error')
       });
     }
   }
 
-  deleteEmployee(id: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este empleado?')) {
-      this.employeeService.deleteEmployee(id).subscribe(() => {
-        // Actualizamos la base de datos local y re-aplicamos filtros
-        this.employees = this.employees.filter(emp => emp.ID !== id);
+  // --- LÓGICA DEL MODAL DE ELIMINAR ---
+  confirmDeleteEmployee(id: number | undefined): void {
+    if (!id) return;
+    this.employeeToDelete = id;
+    this.showDeleteModal = true;
+  }
+
+  cancelDelete() {
+    this.showDeleteModal = false;
+    this.employeeToDelete = null;
+  }
+
+  processDelete() {
+    if (!this.employeeToDelete) return;
+
+    this.employeeService.deleteEmployee(this.employeeToDelete).subscribe({
+      next: () => {
+        this.employees = this.employees.filter(emp => emp.ID !== this.employeeToDelete);
         this.applyFilters(); 
-        this.displayToast('Empleado eliminado');
-      });
-    }
+        this.cancelDelete();
+        this.displayToast('Empleado dado de baja', 'success');
+      },
+      error: () => {
+        this.cancelDelete();
+        this.displayToast('Error al eliminar empleado', 'error');
+      }
+    });
   }
 
-  displayToast(message: string): void {
+  // --- CONTROLADOR DEL TOAST UNIFICADO ---
+  displayToast(message: string, type: 'success' | 'error'): void {
     this.toastMessage = message;
+    this.toastType = type;
     this.showToast = true;
     this.cdr.detectChanges();
     
     setTimeout(() => {
       this.showToast = false;
       this.cdr.detectChanges();
-    }, 3000); 
+    }, 4000); 
   }
 }

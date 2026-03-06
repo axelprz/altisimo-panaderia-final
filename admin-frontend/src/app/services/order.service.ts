@@ -6,24 +6,35 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = 'http://localhost:8080/api/admin/orders';
+  private apiUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {}
 
-  private getHeaders() {
+  private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
-    return token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : new HttpHeaders();
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
   }
 
+  // Obtiene los pedidos recién creados
   getPendingOrders(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/pending`, { headers: this.getHeaders() });
+    return this.http.get<any[]>(`${this.apiUrl}/admin/orders/pending`, { headers: this.getAuthHeaders() });
   }
 
-  updateOrderStatus(id: number, status: string, rejectionReason: string = '', deliveryDate: string = '') {
-  return this.http.put(`${this.apiUrl}/${id}/status`, { 
-    status, 
-    rejection_reason: rejectionReason,
-    delivery_date: deliveryDate // <--- Esto envía la fecha a tu backend en Go
-  }, { headers: this.getHeaders() });
-}
+  // NUEVO: Obtiene los pedidos que ya fueron aceptados y están listos para entregar
+  getAcceptedOrders(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/admin/orders/accepted`, { headers: this.getAuthHeaders() });
+  }
+
+  // Actualiza el estado (sirve para accepted, rejected, delivered, cancelled)
+  updateOrderStatus(id: number, status: string, reason?: string, deliveryDate?: string): Observable<any> {
+    // AQUÍ ESTÁ LA CLAVE: Enviamos "delivery_date" (Snake Case) para que coincida con Go
+    const body = { 
+      status: status, 
+      reason: reason, 
+      delivery_date: deliveryDate // <-- CORRECCIÓN AQUÍ
+    };
+    return this.http.put(`${this.apiUrl}/admin/orders/${id}/status`, body, { headers: this.getAuthHeaders() });
+  }
 }

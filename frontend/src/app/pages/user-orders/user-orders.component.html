@@ -12,63 +12,102 @@
       <p class="text-bakery-brown font-serif italic">Buscando tus pedidos...</p>
     </div>
 
-    <div *ngIf="!isLoading" class="space-y-8">
+    <div *ngIf="!isLoading && (!orders || orders.length === 0)" class="flex flex-col items-center justify-center py-20 bg-white rounded-[2rem] shadow-sm border border-gray-100 text-center animate-enter">
+      <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4 text-gray-400">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+      </div>
+      <h3 class="text-xl font-serif font-bold text-gray-900 mb-2">Aún no has hecho pedidos</h3>
+      <p class="text-gray-500 font-medium mb-6">El horno está encendido, solo falta que elijas tu receta favorita.</p>
+      <a routerLink="/productos" class="px-8 py-3 bg-bakery-brown text-white font-bold rounded-full hover:bg-bakery-gold hover:text-bakery-brown transition-colors shadow-md">Ver Catálogo</a>
+    </div>
+
+    <div *ngIf="!isLoading && orders && orders.length > 0" class="space-y-8">
       <div *ngFor="let order of orders; let i = index" 
-           class="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden animate-enter transition-all duration-500 hover:shadow-xl hover:-translate-y-1 group"
+           class="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden animate-enter transition-all duration-500 hover:shadow-lg hover:-translate-y-1 group"
            [ngClass]="{'delay-100': i === 0, 'delay-200': i === 1, 'delay-300': i === 2, 'delay-500': i >= 3}">
         
-        <div class="px-8 py-4 bg-gray-50/50 flex justify-between items-center border-b border-gray-100">
+        <div class="px-8 py-4 flex justify-between items-center border-b border-gray-100 transition-colors duration-300"
+             [ngClass]="{
+               'bg-yellow-50/50': order.status === 'pending',
+               'bg-green-50/50': order.status === 'accepted',
+               'bg-gray-50': order.status === 'delivered',
+               'bg-red-50/50': order.status === 'rejected' || order.status === 'cancelled'
+             }">
           <div class="flex items-center gap-2">
             <span class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Referencia</span>
             <span class="text-sm font-serif font-bold text-bakery-brown">#{{order.ID}}</span>
           </div>
           
-          <span [ngClass]="{
-            'text-green-700 bg-green-100 border-green-200': order.status === 'accepted',
-            'text-red-700 bg-red-100 border-red-200': order.status === 'rejected',
-            'text-bakery-gold bg-yellow-50 border-yellow-200': order.status === 'pending'
-          }" class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase border tracking-widest shadow-sm">
-            {{ order.status === 'accepted' ? 'Confirmado' : (order.status === 'rejected' ? 'Cancelado' : 'En Espera') }}
+          <span [ngClass]="getStatusClass(order.status)" class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase border tracking-widest shadow-sm">
+            {{ order.status === 'accepted' ? 'Confirmado' : 
+               order.status === 'delivered' ? 'Entregado' :
+               (order.status === 'rejected' || order.status === 'cancelled') ? 'Cancelado' : 'En Espera' }}
           </span>
         </div>
 
         <div class="p-8">
-          <div *ngIf="order.status === 'accepted' && order.delivery_date" 
-               class="mb-8 p-6 bg-green-50/50 rounded-[1.5rem] border border-green-100 flex items-center gap-5 transition-transform group-hover:scale-[1.01]">
-            <div class="bg-white p-3 rounded-xl shadow-sm">
+          
+          <div *ngIf="order.status === 'pending'" class="mb-8 p-6 bg-yellow-50 rounded-[1.5rem] border border-yellow-100 flex items-center gap-5">
+            <div class="bg-white p-3 rounded-xl shadow-sm shrink-0 text-yellow-500">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <div>
+              <p class="text-[10px] font-black text-yellow-700 uppercase tracking-widest mb-1">Pedido en revisión</p>
+              <p class="text-sm font-medium text-yellow-900">Estamos validando tu pedido. Te avisaremos el horario de entrega pronto.</p>
+            </div>
+          </div>
+
+          <div *ngIf="order.status === 'accepted'" class="mb-8 p-6 bg-green-50/80 rounded-[1.5rem] border border-green-200 flex items-center gap-5 transition-transform group-hover:scale-[1.01]">
+            <div class="bg-white p-3 rounded-xl shadow-sm shrink-0">
               <span class="text-3xl">🥖</span>
             </div>
             <div>
-              <p class="text-[10px] font-black text-green-700 uppercase tracking-widest mb-1">Listos para el retiro</p>
+              <p class="text-[10px] font-black text-green-700 uppercase tracking-widest mb-1">Preparando tu envío</p>
               <p class="text-xl font-serif text-green-900 font-bold capitalize">
-                {{ order.delivery_date | date:'EEEE d \'de\' MMMM, HH:mm' }}
+                {{ order.delivery_date ? (order.delivery_date | date:'EEEE d \'de\' MMMM, HH:mm') + ' hs' : 'Horario a confirmar' }}
               </p>
             </div>
           </div>
 
-          <div *ngIf="order.status === 'rejected'" 
-               class="mb-8 p-6 bg-red-50/50 rounded-[1.5rem] border border-red-100 flex items-center gap-5">
-            <div class="bg-white p-3 rounded-xl shadow-sm">
+          <div *ngIf="order.status === 'delivered'" class="mb-8 p-6 bg-gray-50 rounded-[1.5rem] border border-gray-200 flex items-center gap-5">
+            <div class="bg-white p-3 rounded-xl shadow-sm shrink-0 text-gray-400">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <div>
+              <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Pedido Completado</p>
+              <p class="text-sm font-medium text-gray-700">Este pedido ya fue entregado. ¡Esperamos que lo hayas disfrutado!</p>
+            </div>
+          </div>
+
+          <div *ngIf="order.status === 'rejected' || order.status === 'cancelled'" class="mb-8 p-6 bg-red-50/50 rounded-[1.5rem] border border-red-100 flex items-center gap-5">
+            <div class="bg-white p-3 rounded-xl shadow-sm shrink-0">
               <span class="text-3xl">📋</span>
             </div>
             <div>
               <p class="text-[10px] font-black text-red-700 uppercase tracking-widest mb-1">Nota del Panadero</p>
-              <p class="text-sm text-red-900 italic font-medium">"{{ order.rejection_reason }}"</p>
+              <p class="text-sm text-red-900 italic font-medium">
+                "{{ order.rejection_reason || 'Cancelado administrativamente. Contacte al local para más detalles.' }}"
+              </p>
             </div>
           </div>
 
           <div class="space-y-4">
             <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2">Resumen de Compra</h4>
-            <div *ngFor="let item of order.items" class="flex justify-between items-center group/item">
-              <div class="flex items-center gap-3">
-                <div class="w-2 h-2 rounded-full bg-bakery-gold scale-0 group-hover/item:scale-100 transition-transform"></div>
-                <span class="text-gray-700 font-medium">{{ item.quantity }}x {{ item.product?.name }}</span>
+            <div *ngFor="let item of order.items" class="flex justify-between items-center group/item border-b border-gray-50 pb-3 last:border-0 last:pb-0">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
+                   <img *ngIf="item.product?.img" [src]="formatImageUrl(item.product.img)" class="w-full h-full object-cover">
+                </div>
+                <div>
+                  <span class="text-gray-900 font-bold text-sm">{{ item.quantity }}x {{ item.product?.name }}</span>
+                  <p *ngIf="item.variedad" class="text-[10px] text-bakery-gold font-black uppercase tracking-wider">{{ item.variedad }}</p>
+                </div>
               </div>
-              <span class="text-gray-400 font-mono text-sm">${{ item.price * item.quantity }}</span>
+              <span class="text-gray-500 font-medium text-sm">${{ item.price * item.quantity }}</span>
             </div>
           </div>
 
-          <div class="mt-8 pt-6 border-t border-dashed border-gray-200 flex justify-between items-center">
+          <div class="mt-6 pt-6 border-t border-dashed border-gray-200 flex justify-between items-center">
             <div class="flex flex-col">
               <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Hecho con amor por</span>
               <span class="text-sm font-serif font-bold text-bakery-brown">Panadería Altísimo</span>
@@ -80,8 +119,10 @@
               </p>
             </div>
           </div>
+
         </div>
       </div>
     </div>
+
   </div>
 </div>

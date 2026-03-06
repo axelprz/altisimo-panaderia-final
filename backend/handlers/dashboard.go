@@ -2,37 +2,46 @@ package handlers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/axelprz/altisimo-panaderia-final/database"
 	"github.com/axelprz/altisimo-panaderia-final/models"
 	"github.com/gin-gonic/gin"
 )
 
-type DashboardStats struct {
-	TotalSales     float64 `json:"total_sales"`
-	AcceptedOrders int64   `json:"accepted_orders"`
-	PendingOrders  int64   `json:"pending_orders"`
-}
-
 func GetDashboardStats(c *gin.Context) {
 	var pendingCount int64
 	var acceptedCount int64
+	var deliveredCount int64 // NUEVO
 	var totalSales float64
 
-	// 1. Contar pedidos pendientes
+	// Contadores básicos
 	database.DB.Model(&models.Order{}).Where("status = ?", "pending").Count(&pendingCount)
-
-	// 2. Contar pedidos aceptados
 	database.DB.Model(&models.Order{}).Where("status = ?", "accepted").Count(&acceptedCount)
+	database.DB.Model(&models.Order{}).Where("status = ?", "delivered").Count(&deliveredCount)
 
-	// 3. Sumar el total de dinero (solo de pedidos aceptados)
-	// COALESCE evita errores si no hay ninguna venta aún (devuelve 0 en lugar de null)
-	database.DB.Model(&models.Order{}).Where("status = ?", "accepted").Select("COALESCE(SUM(total), 0)").Scan(&totalSales)
+	// Total de dinero (solo entregados)
+	database.DB.Model(&models.Order{}).Where("status = ?", "delivered").Select("COALESCE(SUM(total), 0)").Scan(&totalSales)
 
-	// 4. Enviar los datos exactos que Angular está esperando
+	// NUEVO: Historial de ventas de los últimos 7 días (para el gráfico de líneas)
+	var dailySales []struct {
+		Date  string  `json:"date"`
+		Total float64 `json:"total"`
+	}
+
+	// Consulta SQL para agrupar ventas por día (solo entregados)
+	database.DB.Model(&models.Order{}).
+		Select("DATE(updated_at) as date, SUM(total) as total").
+		Where("status = ? AND updated_at >= ?", "delivered", time.Now().AddDate(0, 0, -7)).
+		Group("DATE(updated_at)").
+		Order("date ASC").
+		Scan(&dailySales)
+
 	c.JSON(http.StatusOK, gin.H{
-		"pending_orders":  pendingCount,
-		"accepted_orders": acceptedCount,
-		"total_sales":     totalSales,
+		"pending_orders":   pendingCount,
+		"accepted_orders":  acceptedCount,
+		"delivered_orders": deliveredCount, // Lo enviamos
+		"total_sales":      totalSales,
+		"daily_sales":      dailySales, // Enviamos el historial
 	})
 }
